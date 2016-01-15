@@ -1,8 +1,6 @@
 package ui;
 
 import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -14,6 +12,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
@@ -30,7 +29,6 @@ public class Interface extends JFrame{
 	private JTextField textFieldPassword;
 	private JLabel lblUsername;
 	private JLabel lblPassword;
-	private JLabel lblInvalidLogin;
 	private CardLayout cardLayout;
 	private JButton btnSubmit;
 	private JLabel picLabel;
@@ -49,13 +47,11 @@ public class Interface extends JFrame{
 		textFieldPassword = new JTextField(10);
 		lblUsername = new JLabel("Username");
 		lblPassword = new JLabel("Password");
-		lblInvalidLogin = new JLabel("Invalid Login");
-		lblInvalidLogin.setVisible(false);
 		cardLayout = new CardLayout();
 		btnSubmit = new JButton("Submit");
 		picLabel = new JLabel("");
 		
-		//login start
+		//login start	
 		Image img = new ImageIcon(this.getClass().getResource("/image1.png")).getImage();
 		picLabel.setIcon(new ImageIcon(img));
 		picLabel.setBounds(10, 53, 166, 266);
@@ -102,12 +98,8 @@ public class Interface extends JFrame{
 		constraints.gridx = 2;
 		constraints.gridy = 3;
 		loginPanel.add(btnSubmit, constraints);
-		
-		constraints.gridx = 3;
-		constraints.gridy = 3;
-		loginPanel.add(lblInvalidLogin, constraints);
-				
-		loginPanel.setBackground(Color.lightGray);
+
+//		loginPanel.setBackground(Color.lightGray);
 		
 		cardPanel.add(loginPanel, "1");
 		//login end
@@ -128,8 +120,11 @@ public class Interface extends JFrame{
 					cardLayout.show(cardPanel, "3");					
 				} else if ((textFieldUsername.getText().equals("senior") && textFieldPassword.getText().equals("senior")) || (textFieldUsername.getText().equals("student") && textFieldPassword.getText().equals("student"))) {
 					cardLayout.show(cardPanel, "2");					
-				} else {
-					lblInvalidLogin.setVisible(true);
+				} else if (!textFieldUsername.getText().isEmpty() && !textFieldPassword.getText().isEmpty()){
+					JOptionPane.showMessageDialog(frame,
+						    "You have entered an invalid login. Please try again.",
+						    "Inane error",
+						    JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
