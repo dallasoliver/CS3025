@@ -1,14 +1,11 @@
 package ui;
 
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import java.awt.CardLayout;
-import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
@@ -17,10 +14,7 @@ import javax.swing.SwingUtilities;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-
-import javax.swing.BoxLayout;
 
 public class Interface extends JFrame{
 	
@@ -35,7 +29,6 @@ public class Interface extends JFrame{
 	private CardLayout cardLayout;
 	private JButton btnSubmit;
 	private JLabel picLabel;
-	private BufferedImage wPic;
 	
 	/**
 	 * Create the panel.
@@ -52,9 +45,6 @@ public class Interface extends JFrame{
 		lblPassword = new JLabel("Password");
 		cardLayout = new CardLayout();
 		btnSubmit = new JButton("Submit");
-		
-		BufferedImage wPic = ImageIO.read(this.getClass().getResource("pic1.png"));
-		picLabel = new JLabel(new ImageIcon(wPic));
 		
 		cardPanel.setLayout(cardLayout);
 		viewPostingsPanel.setLayout(null);
