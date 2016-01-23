@@ -10,9 +10,13 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Date;
 import java.util.Enumeration;
 
 import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -24,23 +28,30 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
+
+import objects.Post;
+
+import org.jdesktop.swingx.JXDatePicker;
 
 import applogic.Logic;
 import applogic.PostCellRenderer;
+import applogic.ResponseCellRenderer;
 
 public class Interface extends JFrame{
 	
 	private static applogic.Logic logic;
+	private String userType;
 	
 	private JFrame frame;
 	private JPanel cardPanel;
 	private JPanel loginPanel;
-	private JPanel viewPostingsPanel;
-	private JPanel addPostPanel;
 	private JPanel adminPanel;
 	private JTextField textFieldUsername;
 	private JPasswordField textFieldPassword;
@@ -49,14 +60,28 @@ public class Interface extends JFrame{
 	private CardLayout cardLayout;
 	private JButton btnSubmit;
 	private JLabel picLabel;
+	private Image imgSmall;
+	private ImageIcon iconSmall;
 	
+	private JPanel viewPostingsPanel;
 	private ButtonGroup btnGroup;
 	private JRadioButton rdoSenior;
 	private JRadioButton rdoStudent;
 	private JButton addPost;
+	private JButton viewMyPosts;
 	private JList postList;
 	private JPanel pane;
 	
+	private JLabel responseLbl;
+	private JList postResponseList;
+	private JPanel postPane;
+	private JPanel viewMyPostsPanel;
+	private JTextField contact;
+	private JTextField message;
+	private JList responseList;
+	private JPanel responsesPane;
+	
+	private JPanel addPostPanel;
 	private ButtonGroup btnGroupAdd;
 	private JRadioButton rdoSeniorAdd;
 	private JRadioButton rdoStudentAdd;
@@ -74,6 +99,7 @@ public class Interface extends JFrame{
 	private JButton btnBack;
 	private JPanel colorPanel;
 	private JLabel userQuestion;
+	private JXDatePicker datePicker;
 	
 	/**
 	 * Create the panel.
@@ -96,10 +122,13 @@ public class Interface extends JFrame{
 		picLabel = new JLabel("");
 		
 		pane = new JPanel();
+		postPane = new JPanel();
 		
 		Image img = new ImageIcon(this.getClass().getResource("/image1.png")).getImage();
-		picLabel.setIcon(new ImageIcon(img));
-		picLabel.setBounds(10, 53, 166, 266);
+		imgSmall = img.getScaledInstance(600, 400,
+				java.awt.Image.SCALE_SMOOTH);
+		iconSmall = new ImageIcon(imgSmall);
+		picLabel.setIcon(iconSmall);
 		
 		cardPanel.setLayout(cardLayout);
 		loginPanel.setLayout(new GridBagLayout());
@@ -154,8 +183,15 @@ public class Interface extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (textFieldUsername.getText().equals("admin") && textFieldPassword.getPassword().equals("admin")) {
-					cardLayout.show(cardPanel, "3");					
+					cardLayout.show(cardPanel, "3");
 				} else if ((textFieldUsername.getText().equals("senior") && textFieldPassword.getPassword().equals("senior")) || (textFieldUsername.getText().equals("student") && textFieldPassword.getText().equals("student"))) {
+					if (textFieldUsername.getText().equals("senior")) {
+						userType = "Senior";
+					}
+					if (textFieldUsername.getText().equals("student")) {
+						userType = "Student";
+					}
+					
 					cardLayout.show(cardPanel, "2");	
 					Object[] postsTest = null;
 					try {
@@ -181,24 +217,61 @@ public class Interface extends JFrame{
 		btnSubmit.setFont(new Font("Source Sans Pro", Font.PLAIN, 24));
 		btnSubmit.setPreferredSize(new Dimension(120, 40));
 		loginPanel.add(btnSubmit, constraints);
-		loginPanel.setBackground(new Color(240,248,255));
+		loginPanel.setBackground(new Color(247, 247, 247));
+		
+		JScrollPane scrollWholePage = new JScrollPane();
+		scrollWholePage.add(loginPanel);
 		cardPanel.add(loginPanel, "1");
 	//login end
 		
 	//view posting start
-		viewPostingsPanel.setLayout(new GridBagLayout());
-		viewPostingsPanel.setBackground(new Color(240,248,255));
+		viewMyPostsPanel = new JPanel();
+		responseLbl = new JLabel();
+		contact = new JTextField();
+		message = new JTextField();
+		responsesPane = new JPanel();
+		
+		colorPanel = new JPanel();
+		colorPanel.setPreferredSize(new Dimension(300,200));
+        colorPanel.setBackground(new Color(205, 0, 0));
 		
 		btnGroup = new ButtonGroup();
 		rdoSenior = new JRadioButton();
 		rdoStudent = new JRadioButton();
-		addPost = new JButton();
+		addPost = new JButton("Add Post");
 		addPost.setFont(new Font("Source Sans Pro", Font.PLAIN, 20));
+
+		viewMyPosts = new JButton("View My Posts");
+		viewMyPosts.setFont(new Font("Source Sans Pro", Font.PLAIN, 20));
+
+		viewPostingsPanel.setLayout(new GridBagLayout());
+		viewPostingsPanel.setBackground(new Color(247, 247, 247));
 		
-		viewPostingsPanel.add(addPost);
+		GridBagConstraints viewPostsConstraints = new GridBagConstraints();
 		
+		viewPostsConstraints.weightx = 1;
+		viewPostsConstraints.weighty = 1;
+		
+		viewPostsConstraints.anchor = GridBagConstraints.LINE_START;
+		viewPostsConstraints.gridwidth = GridBagConstraints.REMAINDER;
+
+		viewPostsConstraints.gridx = 0;
+		viewPostsConstraints.gridy = 0;
+		viewPostsConstraints.fill = GridBagConstraints.HORIZONTAL;
+		viewPostingsPanel.add(colorPanel, viewPostsConstraints);
+		
+		viewPostsConstraints.fill = GridBagConstraints.NONE;
+		
+		viewPostsConstraints.gridx = 0;
+		viewPostsConstraints.gridy = 1;
+		viewPostingsPanel.add(addPost, viewPostsConstraints);
+		
+		viewPostsConstraints.gridx = 0;
+		viewPostsConstraints.gridy = 2;
+		viewPostingsPanel.add(viewMyPosts, viewPostsConstraints);
 		
 		cardPanel.add(addPostPanel, "4");
+		cardPanel.add(viewMyPostsPanel, "5");
 		
 		addPost.addActionListener(new ActionListener() {
 			@Override
@@ -206,22 +279,82 @@ public class Interface extends JFrame{
 				cardLayout.show(cardPanel, "4");					
 			}
 		});
+		
+		viewMyPosts.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cardLayout.show(cardPanel, "5");
+				Object[] postsTest = null;
+				try {
+					postsTest = logic.showMyPosts(userType);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				postResponseList = new JList(postsTest);
+				postResponseList.setBackground(new Color(247, 247, 247));
+				postResponseList.setCellRenderer(new PostCellRenderer());
+				postResponseList.setVisibleRowCount(7);
+				postPane.removeAll();
+				postPane.add(postResponseList);
+			    viewMyPostsPanel.add(postPane);
+			    
+			    postResponseList.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent evt) {
+					    if (evt.getClickCount() == 2) {
+					    	
+			            	Post p = (Post)(postResponseList.getSelectedValue());
+			            	Integer pId = p.getPostId();
+			            	
+							Object[] allResponses = null;
+							try {
+								allResponses = logic.showResponses(pId);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+			            	
+			            	responseList = new JList(allResponses);
+			            	responseList.setBackground(new Color(247, 247, 247));
+			            	responseList.setCellRenderer(new ResponseCellRenderer());
+			            	responseList.setVisibleRowCount(7);
+							responsesPane.removeAll();
+							responsesPane.add(responseList);
+						    viewMyPostsPanel.add(responsesPane);
+					    }
+					}
+				});
+			}
+		});
+
 	//view posting end
 		
+	//view my posts		
+	
+	//view my posts end	
+		
 	//Add post panel
-		colorPanel = new JPanel();
-		colorPanel.setBackground(new Color(125,38,205));
+		Border border = BorderFactory.createLineBorder(Color.GRAY);
+
 		userQuestion = new JLabel("Are you a?");
 		userQuestion.setFont(new Font("Source Sans Pro", Font.PLAIN, 20));
 		btnGroupAdd = new ButtonGroup();
 		rdoSeniorAdd = new JRadioButton("Senior");
 		rdoStudentAdd = new JRadioButton("Student");
 		textFieldWanted = new JTextArea(5, 30);
+		JScrollPane scrollpane1 = new JScrollPane(textFieldWanted);
+		scrollpane1.setBorder(null);
+		textFieldWanted.setBorder(BorderFactory.createCompoundBorder(border, BorderFactory.createEmptyBorder(10, 10, 10, 10)));
 		textFieldWanted.setFont(new Font("Source Sans Pro", Font.PLAIN, 20));
 		textFieldOffer = new JTextArea(5, 30);
+		JScrollPane scrollpane2 = new JScrollPane(textFieldOffer);
+		scrollpane2.setBorder(null);
 		textFieldOffer.setFont(new Font("Source Sans Pro", Font.PLAIN, 20));
+		textFieldOffer.setBorder(BorderFactory.createCompoundBorder(border, BorderFactory.createEmptyBorder(10, 10, 10, 10)));
 		textFieldContact = new JTextArea(2, 30);
+		JScrollPane scrollpane3 = new JScrollPane(textFieldContact);
+		scrollpane3.setBorder(null);
 		textFieldContact.setFont(new Font("Source Sans Pro", Font.PLAIN, 20));
+		textFieldContact.setBorder(BorderFactory.createCompoundBorder(border, BorderFactory.createEmptyBorder(10, 10, 10, 10)));
 		lblWanted = new JLabel("<html>What do you need <br>assistance with?<html/>");
 		lblWanted.setFont(new Font("Source Sans Pro", Font.PLAIN, 20));
 		lblOffer = new JLabel("<html>What can you offer <br>in return?<html/>");
@@ -239,7 +372,10 @@ public class Interface extends JFrame{
 		lblCheck2 = new JLabel("");
 		btnBack = new JButton("Back to View Postings");
 		btnBack.setFont(new Font("Source Sans Pro", Font.PLAIN, 20));
-		pane.setBackground(new Color(240,248,255));
+		pane.setBackground(new Color(247, 247, 247));
+		
+		datePicker = new JXDatePicker();
+		datePicker.getEditor().setEditable(false);
 		
 		btnBack.addActionListener(new ActionListener() {
 			@Override
@@ -251,15 +387,85 @@ public class Interface extends JFrame{
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
-					postList = new JList(postsTest);
-					postList.setBackground(new Color(240,248,255));
-					postList.setCellRenderer(new PostCellRenderer());
-					postList.setVisibleRowCount(7);
-					pane.removeAll();
-				    pane.add(postList);
-				    viewPostingsPanel.add(pane);
+					if (postsTest != null) {
+						postList = new JList(postsTest);
+						postList.setBackground(new Color(247, 247, 247));
+						postList.setCellRenderer(new PostCellRenderer());
+						postList.setVisibleRowCount(7);
+						postList.setFont(new Font("Source Sans Pro", Font.PLAIN, 20));
+						pane.removeAll();
+						pane.add(postList);
+					} else {
+						pane.add(new JLabel("No posts have been added yet!"));
+					}
+					viewPostingsPanel.add(pane);
+
+					postList.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseClicked(MouseEvent evt) {
+						    if (evt.getClickCount() == 2) {
+						    	
+				            	Post p = (Post)(postList.getSelectedValue());
+				            	Integer pId = p.getPostId();
+				            	
+				            	Object[] response = {
+				            	    "Response:", message,
+				            	    "Contact Info:", contact
+				            	};
+				            	
+				            	Object[] options = {"RESPOND", "REPORT", "CANCEL"};
+				            	int option = JOptionPane.showOptionDialog(null, "Click OK to continue", "Warning",
+				                        JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+				            	
+				            	if (option == JOptionPane.YES_OPTION) {
+							    	int opt = JOptionPane.showConfirmDialog(null, response, "Respond To Post", JOptionPane.OK_CANCEL_OPTION);
+					            	if (opt == JOptionPane.OK_OPTION) {
+					            		try {
+											logic.addResponse(message.getText(), contact.getText(), pId);
+										} catch (Exception e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
+					            	}
+				            	}
+				            	
+				            	if (option == JOptionPane.NO_OPTION) {
+				            		JOptionPane.showMessageDialog(null, "This post has been reported", "Report", JOptionPane.OK_OPTION);
+				            	}
+				            	
+						    }
+						}
+					});
 			}
 		});
+		
+//		postList.addListSelectionListener(new ListSelectionListener() {
+//			@Override
+//            public void valueChanged(ListSelectionEvent arg0) {
+//                if (!arg0.getValueIsAdjusting()) {
+//                	Post p = (Post)(postResponseList.getSelectedValue());
+//                	Integer pId = p.getPostId();
+//                	
+//                	Object[] response = {
+//                	    "Response:", message,
+//                	    "Contact Info:", contact
+//                	};
+//
+//                	int option = JOptionPane.showConfirmDialog(null, response, "Respond", JOptionPane.OK_CANCEL_OPTION);
+//                	if (option == JOptionPane.OK_OPTION) {
+//                		try {
+//							logic.addResponse(message.getText(), contact.getText(), pId);
+//						} catch (Exception e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
+//                	} else {
+//                	}
+//                }
+//            }
+//        });
+		
+
 		
 		btnGroupAdd.add(rdoSeniorAdd);
 		btnGroupAdd.add(rdoStudentAdd);
@@ -275,67 +481,67 @@ public class Interface extends JFrame{
 		addPostConstraints.gridx = 0;
 		addPostConstraints.gridy = 0;
 		addPostPanel.add(btnBack);
-		
-		colorPanel.setPreferredSize(new Dimension(100, 70));
-		addPostConstraints.gridx = 0;
-		addPostConstraints.gridy = 1;
-		addPostConstraints.gridwidth = GridBagConstraints.REMAINDER;
-		addPostPanel.add(colorPanel);
 
 		addPostConstraints.anchor = GridBagConstraints.LINE_START;
 		addPostConstraints.gridwidth = GridBagConstraints.REMAINDER;
 		
 		addPostConstraints.gridx = 0;
-		addPostConstraints.gridy = 2;
+		addPostConstraints.gridy = 1;
 		addPostPanel.add(userQuestion, addPostConstraints);
 		
 		addPostConstraints.gridx = 1;
-		addPostConstraints.gridy = 2;
+		addPostConstraints.gridy = 1;
 		addPostPanel.add(rdoSeniorAdd, addPostConstraints);
 		
 		addPostConstraints.gridx = 2;
-		addPostConstraints.gridy = 2;	
+		addPostConstraints.gridy = 1;	
 		addPostPanel.add(rdoStudentAdd, addPostConstraints);
 
 		addPostConstraints.gridx = 1;
+		addPostConstraints.gridy = 2;
+		addPostPanel.add(scrollpane1, addPostConstraints);
+		
+		addPostConstraints.gridx = 1;
 		addPostConstraints.gridy = 3;
-		addPostPanel.add(textFieldWanted, addPostConstraints);
+		addPostPanel.add(scrollpane2, addPostConstraints);
 		
 		addPostConstraints.gridx = 1;
 		addPostConstraints.gridy = 4;
-		addPostPanel.add(textFieldOffer, addPostConstraints);
-		
-		addPostConstraints.gridx = 1;
-		addPostConstraints.gridy = 5;
-		addPostPanel.add(textFieldContact, addPostConstraints);	
+		addPostPanel.add(scrollpane3, addPostConstraints);	
 
 		addPostConstraints.gridwidth = GridBagConstraints.RELATIVE;
 
 		addPostConstraints.gridx = 0;
-		addPostConstraints.gridy = 3;
+		addPostConstraints.gridy = 2;
 		addPostPanel.add(lblWanted, addPostConstraints);
 		
 		constraints.anchor = GridBagConstraints.LINE_END;
 		addPostConstraints.gridx = 0;
-		addPostConstraints.gridy = 4;
+		addPostConstraints.gridy = 3;
 		addPostPanel.add(lblOffer, addPostConstraints);
 		
-		constraints.anchor = GridBagConstraints.LINE_END;
 		addPostConstraints.gridx = 0;
-		addPostConstraints.gridy = 5;
+		addPostConstraints.gridy = 4;
 		addPostPanel.add(lblContact, addPostConstraints);
 		
-		constraints.anchor = GridBagConstraints.LINE_END;
+		//add datepicker
+		datePicker.getEditor().setEditable(false);
+		datePicker.getEditor().setBorder(new LineBorder(new Color(192, 192, 192)));
+		addPostConstraints.gridx = 2;
+		addPostConstraints.gridy = 2;
+		addPostConstraints.insets = new Insets(10,10,10,10);  
+		addPostPanel.add(datePicker, addPostConstraints);
+		
 		addPostConstraints.gridx = 1;
-		addPostConstraints.gridy = 6;
+		addPostConstraints.gridy = 5;
 		addPostPanel.add(submitPost, addPostConstraints);
 		
 		constraints.anchor = GridBagConstraints.CENTER;
 		addPostConstraints.gridx = 2;
-		addPostConstraints.gridy = 6;
+		addPostConstraints.gridy = 5;
 		addPostPanel.add(lblCheck2, addPostConstraints);
 		
-		addPostPanel.setBackground(new Color(240,248,255));
+		addPostPanel.setBackground(new Color(247, 247, 247));
 		
 		submitPost.addActionListener(new ActionListener() {
 			@Override
@@ -355,13 +561,16 @@ public class Interface extends JFrame{
 						}
 					}
 				}
+			
+				Date dateSelected = datePicker.getDate();
 				
 				try {
-					logic.addPost(wanted, offer, contact, user);
+					logic.addPost(wanted, offer, contact, user, dateSelected);
 					lblCheck2.setIcon(iconCheck);
 					textFieldWanted.setText("");
 					textFieldOffer.setText("");
 					textFieldContact.setText("");
+					datePicker.setDate(null);
 				} catch (Exception er) {
 					lblCheck2.setIcon(null);
 //					JOptionPane.showMessageDialog(cardioMainPanel,
@@ -374,6 +583,7 @@ public class Interface extends JFrame{
 		cardPanel.add(viewPostingsPanel, "2");
 		cardPanel.add(adminPanel, "3");
 		cardLayout.show(cardPanel, "1");
+	//end Add Post
 
 		try {
 		    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -398,7 +608,7 @@ public class Interface extends JFrame{
 			}
 		});
 		
-		logic = new Logic("posts.xml");
+		logic = new Logic("posts.xml", "responses.xml");
 	}
 }
 

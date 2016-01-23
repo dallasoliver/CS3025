@@ -3,7 +3,6 @@ package applogic;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.Date;
 import java.util.LinkedList;
 
 import javax.xml.stream.XMLEventReader;
@@ -13,16 +12,13 @@ import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
-import objects.Post;
+import objects.Response;
 
-public class PostParser {
-	static final String USER = "user";
+public class ResponseParser {
 	static final String ID = "postId";
-	static final String WANTED = "wanted";
-	static final String OFFER = "offer";
+	static final String MESSAGE = "message";
 	static final String CONTACT_BY = "contactBy";
-	static final String DATE = "date";
-	static final String POST = "post";
+	static final String RESPONSE = "response";
 
 
 	/**
@@ -30,8 +26,8 @@ public class PostParser {
 	 * @param configFile file path to desired data location
 	 * @return A Linked List of Activities read from the data store
 	 */
-	public static LinkedList<Post> readConfig(String configFile) {
-		LinkedList<Post> posts = new LinkedList<Post>();
+	public static LinkedList<Response> readConfig(String configFile) {
+		LinkedList<Response> responses = new LinkedList<Response>();
 		try {
 			// First, create a new XMLInputFactory
 			XMLInputFactory inputFactory = XMLInputFactory.newInstance();
@@ -39,65 +35,46 @@ public class PostParser {
 			InputStream in = new FileInputStream(configFile);
 			XMLEventReader eventReader = inputFactory.createXMLEventReader(in);
 			// read the XML document
-			Post post = null;
+			Response response = null;
 
 			while (eventReader.hasNext()) {
 				XMLEvent event = eventReader.nextEvent();
 
 				if (event.isStartElement()) {
 					StartElement startElement = event.asStartElement();
-					post = new Post();
+					response = new Response();
 					if (event.asStartElement().getName().getLocalPart()
 							.equals(ID)) {
 						event = eventReader.nextEvent();
-						post.setPostId(Integer.parseInt(event
+						response.setPostId(Integer.parseInt(event
 										.asCharacters().getData()));
 						continue;
 					}
 					if (event.asStartElement().getName().getLocalPart()
-							.equals(WANTED)) {
+							.equals(MESSAGE)) {
 						event = eventReader.nextEvent();
-						post.setWanted(event.asCharacters().getData());
-						continue;
-					}
-					if (event.asStartElement().getName().getLocalPart()
-							.equals(OFFER)) {
-						event = eventReader.nextEvent();
-						post.setOffer(event.asCharacters().getData());
+						response.setMessage(event.asCharacters().getData());
 						continue;
 					}
 					if (event.asStartElement().getName().getLocalPart()
 							.equals(CONTACT_BY)) {
 						event = eventReader.nextEvent();
-						post.setContactBy(event.asCharacters().getData());
+						response.setContactBy(event.asCharacters().getData());
 						continue;
-					}
-					if (event.asStartElement().getName().getLocalPart()
-							.equals(USER)) {
-						event = eventReader.nextEvent();
-						post.setUser(event.asCharacters().getData());
-						continue;
-					}
-					if (event.asStartElement().getName().getLocalPart()
-							.equals(DATE)) {
-						event = eventReader.nextEvent();
-						post.setDate(new Date(Long.parseLong(event
-								.asCharacters().getData())));
-						continue;
-					}			
+					}	
 				}
 				if (event.isEndElement()) {
 					EndElement endElement = event.asEndElement();
-					if (endElement.getName().getLocalPart() == (POST)) {
-						posts.add(post);
+					if (endElement.getName().getLocalPart() == (RESPONSE)) {
+						responses.add(response);
 					}
 				}
 			}
 		} catch (FileNotFoundException e) {
-			posts = new LinkedList<Post>();
+			responses = new LinkedList<Response>();
 		} catch (XMLStreamException e) {
-			posts = new LinkedList<Post>();
+			responses = new LinkedList<Response>();
 		}
-		return posts;
+		return responses;
 	}
 }

@@ -18,23 +18,10 @@ import java.util.ListIterator;
 
 import objects.*;
 
-public class PostWriter {
+public class ResponseWriter {
 
-	public static Integer postId = 0;
-	
-	/**
-	 * Writes a list of posts to the .xml data store
-	 * 
-	 * @param posts
-	 *            list of posts to be written
-	 * @param configFile
-	 *            the path to the .xml data store
-	 * @throws Exception
-	 */
-	public static void saveConfigPost(LinkedList<Post> posts,
+	public static void saveConfigResponse(LinkedList<Response> responses, Integer postId,
 			String configFile) throws Exception {
-		
-		postId++;
 		
 		// create an XMLOutputFactory
 		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
@@ -52,33 +39,27 @@ public class PostWriter {
 		eventWriter.add(startDocument);
 		eventWriter.add(end);
 
-		ListIterator<Post> iterator = (ListIterator<Post>) posts.iterator();
+		ListIterator<Response> iterator = (ListIterator<Response>) responses.iterator();
 		openRootNode(eventWriter);
 		while (iterator.hasNext()) {
-			Post postIn = iterator.next();
-			postIn.setPostId(postId);
+			Response responseIn = iterator.next();
+			responseIn.setPostId(postId);
 
 			// create config open tag
 			StartElement configStartElement = eventFactory
-					.createStartElement("", "", "Post");
+					.createStartElement("", "", "Response");
 			eventWriter.add(configStartElement);
 			eventWriter.add(end);
 
 			// Write the different nodes
 			createNode(eventWriter, "postId", ""
 					+ postId);
-			createNode(eventWriter, "wanted", ""
-					+ postIn.getWanted());
-			createNode(eventWriter, "offer", postIn.getOffer());
+			createNode(eventWriter, "message", ""
+					+ responseIn.getMessage());
 			createNode(eventWriter, "contactBy",
-					("" + (postIn.getContactBy())));
-			createNode(eventWriter, "user",
-					("" + postIn.getUser()));
-			createNode(eventWriter, "date", ""
-					+ postIn.getDate().getTime());
-			
+					("" + (responseIn.getContactBy())));
 			eventWriter.add(eventFactory.createEndElement("", "",
-					"Post"));
+					"Response"));
 			eventWriter.add(end);
 		}
 		closeRootNode(eventWriter);
@@ -129,7 +110,7 @@ public class PostWriter {
 		XMLEvent end = eventFactory.createSpace("\n");
 
 		StartElement sElement = eventFactory.createStartElement("", "",
-				"posts");
+				"responses");
 
 		eventWriter.add(sElement);
 		eventWriter.add(end);
@@ -148,7 +129,7 @@ public class PostWriter {
 		XMLEvent end = eventFactory.createSpace("\n");
 
 		EndElement eElement = eventFactory.createEndElement("", "",
-				"posts");
+				"responses");
 		eventWriter.add(eElement);
 		eventWriter.add(end);
 

@@ -1,9 +1,11 @@
 <?xml version="1.0"?>
 <posts>
 <Post>
-	<wanted>sdfdsf</wanted>
-	<offer>sdfsdfsfs</offer>
-	<contactBy>sdfsdf</contactBy>
-	<user>Senior</user>
+	<postId>1</postId>
+	<wanted>adadad</wanted>
+	<offer>adsdas</offer>
+	<contactBy>dasdasd</contactBy>
+	<user>Student</user>
+	<date>1453867200000</date>
 </Post>
 </posts>
