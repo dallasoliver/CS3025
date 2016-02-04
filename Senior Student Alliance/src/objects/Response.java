@@ -39,4 +39,11 @@ public class Response {
 	public void setPostId(Integer postId) {
 		this.postId = postId;
 	}
+	
+	@Override
+	public String toString() {
+		return "Response:"
+		+ "\n    Message: " + this.getMessage()
+		+ "\n    Contact me at: " + this.getContactBy();
+	}
 }

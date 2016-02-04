@@ -70,8 +70,6 @@ public class PostWriter {
 			createNode(eventWriter, "wanted", ""
 					+ postIn.getWanted());
 			createNode(eventWriter, "offer", postIn.getOffer());
-			createNode(eventWriter, "contactBy",
-					("" + (postIn.getContactBy())));
 			createNode(eventWriter, "user",
 					("" + postIn.getUser()));
 			createNode(eventWriter, "date", ""

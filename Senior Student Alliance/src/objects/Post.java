@@ -7,16 +7,14 @@ public class Post {
 	private Integer postId;
 	private String wanted;
 	private String offer;
-	private String contactBy;
 	private String user;
 	private Date date;
 	
-	public Post(String wanted, String offer, String contactBy, String user, Date date) {
+	public Post(String wanted, String offer, String user, Date date) {
 		this.wanted = wanted;
 		this.offer = offer;
-		this.contactBy = contactBy;
 		this.user = user;
-		this.setDate(date);
+		this.date = date;
 	}
 	
 	public Post() {
@@ -44,14 +42,6 @@ public class Post {
 	
 	public void setOffer(String offer) {
 		this.offer = offer;
-	}
-	
-	public String getContactBy() {
-		return contactBy;
-	}
-	
-	public void setContactBy(String contactBy) {
-		this.contactBy = contactBy;
 	}
 
 	public String getUser() {

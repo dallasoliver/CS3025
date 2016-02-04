@@ -20,7 +20,6 @@ public class PostParser {
 	static final String ID = "postId";
 	static final String WANTED = "wanted";
 	static final String OFFER = "offer";
-	static final String CONTACT_BY = "contactBy";
 	static final String DATE = "date";
 	static final String POST = "post";
 
@@ -64,12 +63,6 @@ public class PostParser {
 							.equals(OFFER)) {
 						event = eventReader.nextEvent();
 						post.setOffer(event.asCharacters().getData());
-						continue;
-					}
-					if (event.asStartElement().getName().getLocalPart()
-							.equals(CONTACT_BY)) {
-						event = eventReader.nextEvent();
-						post.setContactBy(event.asCharacters().getData());
 						continue;
 					}
 					if (event.asStartElement().getName().getLocalPart()

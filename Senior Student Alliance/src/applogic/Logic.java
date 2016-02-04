@@ -23,7 +23,7 @@ public class Logic {
 		responses = ResponseParser.readConfig(configFileResponse);
 	}
 
-	public void addPost(String wanted, String offer, String contactBy, String user, Date date) throws Exception {
+	public void addPost(String wanted, String offer, String user, Date date) throws Exception {
 		String errorMessage = "The following errors have occurred:\n";
 		boolean isError = false;
 
@@ -35,11 +35,6 @@ public class Logic {
 		
 		if (offer.isEmpty()) {
 			errorMessage += "The task you offer in return must be specified.\n";
-			isError = true;
-		}
-		
-		if (contactBy.isEmpty()) {
-			errorMessage += "Your contact information must be specified.\n";
 			isError = true;
 		}
 		
@@ -59,7 +54,7 @@ public class Logic {
 			throw new Exception(errorMessage);
 		}
 
-		Post newPost = new Post(wanted, offer, contactBy, user, date);
+		Post newPost = new Post(wanted, offer, user, date);
 		posts.add(newPost);
 		savePostXML();
 	}
@@ -100,36 +95,36 @@ public class Logic {
 		ResponseWriter.saveConfigResponse(responses, postId, configFileResponse);
 	}
 
-	public String filterBySeniorUser(String userType) throws Exception {
-		LinkedList<Post> resultsList = new LinkedList<Post>();
-		Iterator<Post> it = posts.iterator();
-		while (it.hasNext()) {
-			Post act = it.next();
-			if (act.getUser().equals("senior")) {
-				resultsList.add(act);
-			}
-		}
-		return display(resultsList);
-	}
-	
-	public String filterByStudentUser(String userType) throws Exception {
-		LinkedList<Post> resultsList = new LinkedList<Post>();
-		Iterator<Post> it = posts.iterator();
-		while (it.hasNext()) {
-			Post act = it.next();
-			if (act.getUser().equals("student")) {
-				resultsList.add(act);
-			}
-		}
-		return display(resultsList);
-	}
+//	public String filterBySeniorUser(String userType) throws Exception {
+//		LinkedList<Post> resultsList = new LinkedList<Post>();
+//		Iterator<Post> it = posts.iterator();
+//		while (it.hasNext()) {
+//			Post act = it.next();
+//			if (act.getUser().equals("senior")) {
+//				resultsList.add(act);
+//			}
+//		}
+//		return display(resultsList);
+//	}
+//	
+//	public String filterByStudentUser(String userType) throws Exception {
+//		LinkedList<Post> resultsList = new LinkedList<Post>();
+//		Iterator<Post> it = posts.iterator();
+//		while (it.hasNext()) {
+//			Post act = it.next();
+//			if (act.getUser().equals("student")) {
+//				resultsList.add(act);
+//			}
+//		}
+//		return display(resultsList);
+//	}
 
-	private String display(LinkedList<Post> posts) {
+	private String displayResponses(ArrayList<Response> responses) {
 		String ret = "";
-		Iterator<Post> it = posts.iterator();
+		Iterator<Response> it = responses.iterator();
 		while (it.hasNext()) {
-			Post post = it.next();
-			ret += post.toString() + "\n";
+			Response response = it.next();
+			ret += response.toString() + "\n";
 		}
 		if (ret.isEmpty()) {
 			ret = "There are no recorded posts.";
@@ -167,7 +162,7 @@ public class Logic {
 		}
 	}
 	
-	public Object[] showResponses(Integer postId) throws Exception {
+	public String showResponses(Integer postId) throws Exception {
 		ArrayList<Response> resultsList = new ArrayList<Response>();
 		Iterator<Response> it = responses.iterator();
 		while (it.hasNext()) {
@@ -176,15 +171,6 @@ public class Logic {
 				resultsList.add(response);
 			}
 		}
-		return getResponseList(resultsList);
+		return displayResponses(resultsList);
 	}
-	
-	private Object[] getResponseList(ArrayList<Response> responses) {
-		if (responses != null) {
-			return responses.toArray();			
-		}else {
-			return null;
-		}
-	}
-
 }
