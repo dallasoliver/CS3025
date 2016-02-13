@@ -2,7 +2,17 @@
 <responses>
 <Response>
 	<postId>1</postId>
-	<message>ddd</message>
-	<contactBy>ddd</contactBy>
+	<message>asd</message>
+	<contactBy>asd</contactBy>
+</Response>
+<Response>
+	<postId>1</postId>
+	<message>sdfsd</message>
+	<contactBy>asd</contactBy>
+</Response>
+<Response>
+	<postId>1</postId>
+	<message>sdfsd</message>
+	<contactBy>2</contactBy>
 </Response>
 </responses>

@@ -159,7 +159,7 @@ public class Interface extends JFrame{
 		loginPanel.setLayout(new GridBagLayout());
 		
 		noPostsAddedLbl = new JLabel("No posts have been added yet!");
-		noPostsAddedLbl.setFont(new Font("Source Sans Pro", Font.PLAIN, 20));
+		noPostsAddedLbl.setFont(new Font("Georgia", Font.PLAIN, 20));
 		
 		GridBagConstraints constraints = new GridBagConstraints();
 		
@@ -179,19 +179,19 @@ public class Interface extends JFrame{
 		constraints.gridx = 1;
 		constraints.gridy = 1;
 		constraints.insets = new Insets(8,8,8,8);  
-		lblUsername.setFont(new Font("Source Sans Pro", Font.PLAIN, 20));
+		lblUsername.setFont(new Font("Georgia", Font.PLAIN, 20));
 		loginPanel.add(lblUsername, constraints);
 		
 		constraints.gridx = 1;
 		constraints.gridy = 2;
-		lblPassword.setFont(new Font("Source Sans Pro", Font.PLAIN, 20));
+		lblPassword.setFont(new Font("Georgia", Font.PLAIN, 20));
 		loginPanel.add(lblPassword, constraints);
 		
 		constraints.anchor = GridBagConstraints.LINE_START;
 		constraints.gridx = 2;
 		constraints.gridy = 1;
 		textFieldUsername.setPreferredSize(new Dimension(190, 40));
-		textFieldUsername.setFont(new Font("Source Sans Pro", Font.PLAIN, 20));
+		textFieldUsername.setFont(new Font("Georgia", Font.PLAIN, 20));
 		loginPanel.add(textFieldUsername, constraints);
 		
 		constraints.gridx = 2;
@@ -199,7 +199,7 @@ public class Interface extends JFrame{
 		loginPanel.add(textFieldPassword, constraints);
 		textFieldPassword.setEchoChar('*');
 		textFieldPassword.setPreferredSize(new Dimension(190, 40));
-		textFieldPassword.setFont(new Font("Source Sans Pro", Font.PLAIN, 20));
+		textFieldPassword.setFont(new Font("Georgia", Font.PLAIN, 20));
 		btnSubmit.setSize(10, 20);
 		
 		constraints.anchor = GridBagConstraints.FIRST_LINE_START;
@@ -235,10 +235,11 @@ public class Interface extends JFrame{
 							@Override
 				            public JToolTip createToolTip() {
 				                JToolTip toolTip = super.createToolTip();
+				                toolTip.setFont(new Font("Georgia", Font.PLAIN, 17));
 				                toolTip.setBackground(Color.BLACK);
 				                toolTip.setForeground(Color.WHITE);
 	
-				                    return toolTip;
+				                return toolTip;
 				            }
 						};
 						
@@ -313,10 +314,10 @@ public class Interface extends JFrame{
 			}
 		});
 		 
-		btnSubmit.setFont(new Font("Source Sans Pro", Font.PLAIN, 24));
+		btnSubmit.setFont(new Font("Georgia", Font.PLAIN, 24));
 		btnSubmit.setPreferredSize(new Dimension(120, 40));
 		loginPanel.add(btnSubmit, constraints);
-		loginPanel.setBackground(new Color(247, 247, 247));
+		loginPanel.setBackground(new Color(215, 215, 215));
 		
 		JScrollPane scrollWholePage = new JScrollPane();
 		scrollWholePage.add(loginPanel);
@@ -331,13 +332,14 @@ public class Interface extends JFrame{
 			@Override
             public JToolTip createToolTip() {
                 JToolTip toolTip = super.createToolTip();
+                toolTip.setFont(new Font("Georgia", Font.PLAIN, 17));
                 toolTip.setBackground(Color.BLACK);
                 toolTip.setForeground(Color.WHITE);
 
-                    return toolTip;
+                return toolTip;
             }
 		};
-		logoutAllPostsBtn.setFont(new Font("Source Sans Pro", Font.PLAIN, 24));
+		logoutAllPostsBtn.setFont(new Font("Georgia", Font.PLAIN, 24));
 		logoutAllPostsBtn.setPreferredSize(new Dimension(120, 40));
 		logoutAllPostsBtn.setBorder(null);
 		logoutAllPostsBtn.setBackground(new Color(205, 0, 0));
@@ -348,13 +350,14 @@ public class Interface extends JFrame{
 			@Override
             public JToolTip createToolTip() {
                 JToolTip toolTip = super.createToolTip();
+                toolTip.setFont(new Font("Georgia", Font.PLAIN, 17));
                 toolTip.setBackground(Color.BLACK);
                 toolTip.setForeground(Color.WHITE);
 
-                    return toolTip;
+                return toolTip;
             }
 		};
-		helpAllPostsBtn.setFont(new Font("Source Sans Pro", Font.PLAIN, 24));
+		helpAllPostsBtn.setFont(new Font("Georgia", Font.PLAIN, 24));
 		helpAllPostsBtn.setPreferredSize(new Dimension(120, 40));
 		helpAllPostsBtn.setBorder(null);
 		helpAllPostsBtn.setBackground(new Color(205, 0, 0));
@@ -372,23 +375,13 @@ public class Interface extends JFrame{
         buttonPanel.setOpaque(false);
         
         viewPostingsPanel.setLayout(new GridBagLayout());
-        viewPostingsPanel.setBackground(new Color(232, 232, 232));
-        
-//        JButton newJ = new JButton("hi");
-//        JPanel backButtonPanel = new JPanel();
-//        backButtonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-//        backButtonPanel.add(newJ);
-//        backButtonPanel.setOpaque(false);
+        viewPostingsPanel.setBackground(new Color(215, 215, 215));
 
         allPostsRedPanel.setLayout(new GridBagLayout());
 		GridBagConstraints redPanelConstraints = new GridBagConstraints();
 		redPanelConstraints.weightx = 0.5;
 		redPanelConstraints.weighty = 0.5;
 		redPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
-
-//		colorPanelConstraints.gridx = 0;
-//		colorPanelConstraints.gridy = 0;
-//		colorPanel.add(backButtonPanel, colorPanelConstraints);
 		
 		redPanelConstraints.gridx = 0;
 		redPanelConstraints.gridy = 0;
@@ -409,7 +402,7 @@ public class Interface extends JFrame{
 
 		allPostsBottomPanelRight = new JPanel(new GridBagLayout());
 		allPostsBottomPanelRight.setPreferredSize(new Dimension(300,600));
-		allPostsBottomPanelRight.setBackground(new Color(234, 55, 228));
+		allPostsBottomPanelRight.setBackground(new Color(215, 215, 215));
 
 		btnGroup = new ButtonGroup();
 		rdoSenior = new JRadioButton("Senior");
@@ -423,8 +416,19 @@ public class Interface extends JFrame{
 		
 		bottomPanelRightConstraints = new GridBagConstraints();
 		
-		JLabel filterBy = new JLabel("Filter By:");
-		filterBy.setFont(new Font("Source Sans Pro", Font.PLAIN, 20));
+		JLabel filterBy = new JLabel("Filter By:") {
+			@Override
+            public JToolTip createToolTip() {
+                JToolTip toolTip = super.createToolTip();
+                toolTip.setFont(new Font("Georgia", Font.PLAIN, 17));
+                toolTip.setBackground(Color.BLACK);
+                toolTip.setForeground(Color.WHITE);
+
+                return toolTip;
+            }
+		};
+		filterBy.setToolTipText("Select to only see posts by that type of user.");
+		filterBy.setFont(new Font("Georgia", Font.PLAIN, 20));
 		bottomPanelRightConstraints.insets = new Insets(30,30,30,30); 
 		bottomPanelRightConstraints.weightx = 0;
 		bottomPanelRightConstraints.anchor = GridBagConstraints.LINE_START;
@@ -449,13 +453,35 @@ public class Interface extends JFrame{
 		
 		allPostsBottomPanelLeft = new JPanel(new GridBagLayout());
 		allPostsBottomPanelLeft.setPreferredSize(new Dimension(300,600));
-		allPostsBottomPanelLeft.setBackground(new Color(3, 228, 228));
+		allPostsBottomPanelLeft.setBackground(new Color(215, 215, 215));
 
-		goToAddPostBtn = new JButton("Add Post");
-		goToAddPostBtn.setFont(new Font("Source Sans Pro", Font.PLAIN, 25));
+		goToAddPostBtn = new JButton("Add Post") {
+			@Override
+            public JToolTip createToolTip() {
+                JToolTip toolTip = super.createToolTip();
+                toolTip.setFont(new Font("Georgia", Font.PLAIN, 17));
+                toolTip.setBackground(Color.BLACK);
+                toolTip.setForeground(Color.WHITE);
+
+                return toolTip;
+            }
+		};
+		goToAddPostBtn.setToolTipText("Click to go to the page to publish a new post to the website.");
+		goToAddPostBtn.setFont(new Font("Georgia", Font.PLAIN, 25));
 		goToAddPostBtn.setPreferredSize(new Dimension(180, 50));
-		goToMyPostsBtn = new JButton("View My Posts");
-		goToMyPostsBtn.setFont(new Font("Source Sans Pro", Font.PLAIN, 25));
+		goToMyPostsBtn = new JButton("View My Posts") {
+			@Override
+            public JToolTip createToolTip() {
+                JToolTip toolTip = super.createToolTip();
+                toolTip.setFont(new Font("Georgia", Font.PLAIN, 17));
+                toolTip.setBackground(Color.BLACK);
+                toolTip.setForeground(Color.WHITE);
+
+                return toolTip;
+            }
+		};
+		goToMyPostsBtn.setToolTipText("Click to go to the page to view your own published posts. Here you can also check to view responses to your posts");
+		goToMyPostsBtn.setFont(new Font("Georgia", Font.PLAIN, 25));
 		goToMyPostsBtn.setPreferredSize(new Dimension(240, 50));
 		
 		unbImageLabel = new JLabel("");
@@ -565,9 +591,14 @@ public class Interface extends JFrame{
 						    if (evt.getClickCount() == 1) {
 				            	Post p = (Post)(postResponseList.getSelectedValue());
 				            	Integer pId = p.getPostId();
+				            	try {
 				            	
-								try {
-									responsesText.setText(logic.showResponses(pId));
+				            	if (logic.countResponses(pId) > 2) {
+
+				    				int opt = JOptionPane.showConfirmDialog(frame, p, "Have you completed this task yet? Click Yes to delete the post.", JOptionPane.YES_NO_OPTION);
+
+				            	}
+								responsesText.setText(logic.showResponses(pId));
 								}catch(Exception e) {
 //									JOptionPane.showMessageDialog(compareWorkoutsPanel,
 //											e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -633,20 +664,32 @@ public class Interface extends JFrame{
 		JScrollPane scrollpane1 = new JScrollPane(textFieldWanted);
 		scrollpane1.setBorder(null);
 		textFieldWanted.setBorder(BorderFactory.createCompoundBorder(border, BorderFactory.createEmptyBorder(10, 10, 10, 10)));
-		textFieldWanted.setFont(new Font("Source Sans Pro", Font.PLAIN, 20));
+		textFieldWanted.setFont(new Font("Georgia", Font.PLAIN, 20));
 		textFieldOffer = new JTextArea(3, 30);
 		JScrollPane scrollpane2 = new JScrollPane(textFieldOffer);
 		scrollpane2.setBorder(null);
-		textFieldOffer.setFont(new Font("Source Sans Pro", Font.PLAIN, 20));
+		textFieldOffer.setFont(new Font("Georgia", Font.PLAIN, 20));
 		textFieldOffer.setBorder(BorderFactory.createCompoundBorder(border, BorderFactory.createEmptyBorder(10, 10, 10, 10)));
 		lblWanted = new JLabel("<html>What do you need assistance with?<html/>");
-		lblWanted.setFont(new Font("Source Sans Pro", Font.PLAIN, 20));
+		lblWanted.setFont(new Font("Georgia", Font.PLAIN, 20));
 		lblOffer = new JLabel("<html>What can you offer in return?<html/>");
-		lblOffer.setFont(new Font("Source Sans Pro", Font.PLAIN, 20));
+		lblOffer.setFont(new Font("Georgia", Font.PLAIN, 20));
 		lblAvailable = new JLabel("<html>Choose a date for the meeting:<html/>");
-		lblAvailable.setFont(new Font("Source Sans Pro", Font.PLAIN, 20));
-		submitPost = new JButton("Submit Post");
-		submitPost.setFont(new Font("Source Sans Pro", Font.PLAIN, 20));
+		lblAvailable.setFont(new Font("Georgia", Font.PLAIN, 20));
+		submitPost = new JButton("Submit Post") {
+			@Override
+	        public JToolTip createToolTip() {
+		        JToolTip toolTip = super.createToolTip();
+		        toolTip.setFont(new Font("Georgia", Font.PLAIN, 17));
+		        toolTip.setBackground(Color.BLACK);
+		        toolTip.setForeground(Color.WHITE);
+		
+		        return toolTip;
+			}
+        };
+        submitPost.setToolTipText("Click to publish this information to the website in a post.");
+		submitPost.setFont(new Font("Georgia", Font.PLAIN, 20));
+		submitPost.setPreferredSize(new Dimension(130, 40));
 		imgCheck = new ImageIcon(
 				Interface.class.getResource("/check-mark.png"))
 				.getImage();
@@ -670,6 +713,7 @@ public class Interface extends JFrame{
 			@Override
             public JToolTip createToolTip() {
                 JToolTip toolTip = super.createToolTip();
+                toolTip.setFont(new Font("Georgia", Font.PLAIN, 17));
                 toolTip.setBackground(Color.BLACK);
                 toolTip.setForeground(Color.WHITE);
 
@@ -677,7 +721,7 @@ public class Interface extends JFrame{
             }
 		};
 		
-		logoutAddPostsBtn.setFont(new Font("Source Sans Pro", Font.PLAIN, 24));
+		logoutAddPostsBtn.setFont(new Font("Georgia", Font.PLAIN, 24));
 		logoutAddPostsBtn.setPreferredSize(new Dimension(120, 40));
 		logoutAddPostsBtn.setBorder(null);
 		logoutAddPostsBtn.setBackground(new Color(205, 0, 0));
@@ -688,13 +732,14 @@ public class Interface extends JFrame{
 			@Override
             public JToolTip createToolTip() {
                 JToolTip toolTip = super.createToolTip();
+                toolTip.setFont(new Font("Georgia", Font.PLAIN, 17));
                 toolTip.setBackground(Color.BLACK);
                 toolTip.setForeground(Color.WHITE);
 
-                    return toolTip;
+                return toolTip;
             }
 		};
-		helpAddPostsBtn.setFont(new Font("Source Sans Pro", Font.PLAIN, 24));
+		helpAddPostsBtn.setFont(new Font("Georgia", Font.PLAIN, 24));
 		helpAddPostsBtn.setPreferredSize(new Dimension(120, 40));
 		helpAddPostsBtn.setBorder(null);
 		helpAddPostsBtn.setBackground(new Color(205, 0, 0));
@@ -705,18 +750,19 @@ public class Interface extends JFrame{
 			@Override
             public JToolTip createToolTip() {
                 JToolTip toolTip = super.createToolTip();
+                toolTip.setFont(new Font("Georgia", Font.PLAIN, 17));
                 toolTip.setBackground(Color.BLACK);
                 toolTip.setForeground(Color.WHITE);
 
-                    return toolTip;
+                return toolTip;
             }
 		};
-		backToViewAllPostsBtn.setFont(new Font("Source Sans Pro", Font.PLAIN, 24));
+		backToViewAllPostsBtn.setFont(new Font("Georgia", Font.PLAIN, 24));
 		backToViewAllPostsBtn.setPreferredSize(new Dimension(260, 40));
 		backToViewAllPostsBtn.setBorder(null);
 		backToViewAllPostsBtn.setBackground(new Color(205, 0, 0));
 		backToViewAllPostsBtn.setForeground(Color.WHITE);
-		backToViewAllPostsBtn.setToolTipText("Click to learn how to find the instructions on this webpage");
+		backToViewAllPostsBtn.setToolTipText("Click to return to the page to view all posts.");
 		
 		backToViewAllPostsBtn.addActionListener(new ActionListener() {
 			@Override
@@ -733,10 +779,11 @@ public class Interface extends JFrame{
 							@Override
 				            public JToolTip createToolTip() {
 				                JToolTip toolTip = super.createToolTip();
+				                toolTip.setFont(new Font("Georgia", Font.PLAIN, 17));
 				                toolTip.setBackground(Color.BLACK);
 				                toolTip.setForeground(Color.WHITE);
 
-				                    return toolTip;
+				                return toolTip;
 				            }
 						};
 						allPostsList.setBackground(new Color(255, 255, 255));
@@ -866,7 +913,7 @@ public class Interface extends JFrame{
 		//----bottom
 		addPostsBottomPanel = new JPanel(new GridBagLayout());
 		addPostsBottomPanel.setPreferredSize(new Dimension(300,600));
-		addPostsBottomPanel.setBackground(new Color(228, 228, 228));
+		addPostsBottomPanel.setBackground(new Color(215, 215, 215));
 		
 		bottomPanelAddConstraints = new GridBagConstraints();
 		bottomPanelAddConstraints.weightx = 0.5;

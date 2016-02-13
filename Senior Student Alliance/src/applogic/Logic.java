@@ -173,4 +173,14 @@ public class Logic {
 		}
 		return displayResponses(resultsList);
 	}
+	
+	public Integer countResponses(Integer postId) throws Exception {
+		ArrayList<Response> resultsList = new ArrayList<Response>();
+//		Iterator<Response> it = responses.iterator();
+//		Integer count = 0;
+//		while (it.hasNext()) {
+//			count++;
+//		}
+		return resultsList.size();
+	}
 }
