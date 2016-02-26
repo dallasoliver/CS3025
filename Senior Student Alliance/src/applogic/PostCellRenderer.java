@@ -26,7 +26,7 @@ public class PostCellRenderer extends JLabel implements ListCellRenderer {
  		setBackground(new Color(255,255,255));
  
 		if (isSelected) {
-			setBackground(new Color (240, 248, 255));
+			setBackground(new Color (164,211,238));
 		    setForeground(Color.black);
 		} else {
 	  		setBackground(new Color(255, 255, 255));

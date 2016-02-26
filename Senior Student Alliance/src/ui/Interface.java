@@ -17,7 +17,6 @@ import java.awt.event.MouseEvent;
 import java.util.Date;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -169,7 +168,7 @@ public class Interface extends JFrame{
 		btnSubmit = new JButton("Submit");
 		postPane = new JPanel();
 		postPane.setBackground(new Color(255, 255, 255));
-		postPane.setPreferredSize(new Dimension (600,300));
+		postPane.setPreferredSize(new Dimension (600,240));
 		postPane.setBorder(new LineBorder(Color.BLACK, 3));
 		allPostsListPane = new JPanel();
 		logoImageLabel = new JLabel("");
@@ -245,7 +244,9 @@ public class Interface extends JFrame{
 					
 					textFieldUsername.setText(null);
 					textFieldPassword.setText(null);
-
+					rdoSenior.setSelected(false);
+					rdoStudent.setSelected(false);
+					btnGroup.clearSelection();
 					cardLayout.show(cardPanel, "2");	
 					Object[] postsTest = null;
 					try {
@@ -795,6 +796,7 @@ public class Interface extends JFrame{
 		goToAddPostBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				lblCheck2.setIcon(null);
 				cardLayout.show(cardPanel, "4");					
 			}
 		});
@@ -825,7 +827,7 @@ public class Interface extends JFrame{
 					postResponseList.setCellRenderer(new PostCellRenderer());
 					
 					myPostsScrollPane = new JScrollPane(postResponseList);
-					myPostsScrollPane.setPreferredSize(new Dimension (590,270));
+					myPostsScrollPane.setPreferredSize(new Dimension (590,220));
 					myPostsScrollPane.setBorder(null);
 					
 					postPane.removeAll();
@@ -835,11 +837,18 @@ public class Interface extends JFrame{
 					
 				} else {
 					postPane.removeAll();
-					postPane.add(new JLabel());
+					JLabel noPostsYet = new JLabel("You have not posted anything to the website yet!");
+					noPostsYet.setFont(new Font("Georgia", Font.PLAIN, 20));
+					postPane.add(noPostsYet);
 					postResponseList = new JList();
 				}
-				respScrollPane.setPreferredSize(new Dimension(450,350));
+				respScrollPane.setPreferredSize(new Dimension(410,350));
+        		responsesText.setText("Click a post to view it's responses.");
 				respScrollPane.setViewportView(responsesText);
+				respScrollPane.setPreferredSize(new Dimension(390,350));
+				responsesPane.setPreferredSize(new Dimension(400,350));
+				responsesPane.setBorder(new LineBorder(Color.BLACK, 3));
+				responsesPane.setBackground(Color.WHITE);
 				responsesPane.removeAll();
 				responsesPane.add(respScrollPane);
 				
@@ -852,12 +861,19 @@ public class Interface extends JFrame{
 			            	int opt = -1;
 			            	try {
 			            		responsesText.setText(logic.showResponses(pId));
+			    				respScrollPane.setViewportView(responsesText);
+			    				responsesPane.removeAll();
+			    				responsesPane.add(respScrollPane);
+			    				responsesPane.repaint();
+								repaint();
+								frame.repaint();
 				            	if (logic.countResponses(pId) > 2) {
 				    				opt = JOptionPane.showConfirmDialog(postPane, "Have you completed this task yet? Click Yes to delete the post.", "Have you completed this task yet?", JOptionPane.YES_NO_OPTION);
 				            	}
 								if (opt == 0) {
 									logic.delete(pId);
 									responsesText.setText(null);
+									JOptionPane.showMessageDialog(frame, "You have deleted this post. Return to View All Posts to update the list.");
 									postResponseList.repaint();
 									postPane.repaint();
 									repaint();
@@ -874,9 +890,26 @@ public class Interface extends JFrame{
 			
 				
 			    leftTop.add(postPane);
-			   
+			    
+			    myBottomPanelRightConstraints = new GridBagConstraints();
+
+				myBottomPanelRightConstraints.insets = new Insets(15,15,15,35); 
+			    myBottomPanelRightConstraints.weightx = 0.5;
+			    myBottomPanelRightConstraints.weighty = 0;
+			    myBottomPanelRightConstraints.anchor = GridBagConstraints.LINE_START;
 			    myBottomPanelRightConstraints.gridx = 0;
 			    myBottomPanelRightConstraints.gridy = 0;
+			    JLabel responseLabel = new JLabel("Reponses");
+			    responseLabel.setFont(new Font("Georgia", Font.PLAIN, 27));
+			    myPostsBottomPanelRight.add(responseLabel, myBottomPanelRightConstraints);
+			    
+			    myBottomPanelRightConstraints.weighty = 1;
+			    myBottomPanelRightConstraints.anchor = GridBagConstraints.CENTER;
+				myBottomPanelRightConstraints.gridheight = GridBagConstraints.REMAINDER;
+				myBottomPanelRightConstraints.fill = GridBagConstraints.BOTH;
+			   
+			    myBottomPanelRightConstraints.gridx = 0;
+			    myBottomPanelRightConstraints.gridy = 1;
 			    myPostsBottomPanelRight.add(responsesPane, myBottomPanelRightConstraints);
 			}
 		});
@@ -911,12 +944,12 @@ public class Interface extends JFrame{
 		responsesText.setWrapStyleWord(true);
 		responsesText.setLineWrap(true);
 		responsesText.setForeground(Color.BLACK);
-		responsesText.setFont(new Font("Microsoft Tai Le", Font.PLAIN, 14));
+		responsesText.setFont(new Font("Georgia", Font.PLAIN, 18));
 		responsesText.setBackground(Color.WHITE);
 		
 		deletePost = new JButton("Delete Post");
-		deletePost.setPreferredSize(new Dimension(100,20));
-		
+		deletePost.setFont(new Font("Georgia", Font.PLAIN, 24));
+		deletePost.setPreferredSize(new Dimension(180, 40));
 		
 		logoutMyPostsBtn = new JButton("<html><u>Logout</u></html>") {
 			@Override
@@ -977,6 +1010,7 @@ public class Interface extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				rdoSenior.setSelected(false);
 				rdoStudent.setSelected(false);
+				btnGroup.clearSelection();
 				cardLayout.show(cardPanel, "2");	
 				Object[] postsTest = null;
 				try {
@@ -1109,14 +1143,6 @@ public class Interface extends JFrame{
 		myPostsBottomPanelRight.setPreferredSize(new Dimension(600,600));
 		myPostsBottomPanelRight.setBackground(new Color(215, 215, 215));
 		
-		myBottomPanelRightConstraints = new GridBagConstraints();
-		myBottomPanelRightConstraints.weightx = 0.2;
-		myBottomPanelRightConstraints.weighty = 0.2;
-
-		myBottomPanelRightConstraints.gridheight = GridBagConstraints.REMAINDER;
-		myBottomPanelRightConstraints.insets = new Insets(30,30,30,30); 
-		myBottomPanelRightConstraints.fill = GridBagConstraints.BOTH;
-
 		//--------left-------
 		
 		myPostsBottomPanelLeft = new JPanel(new GridBagLayout());
@@ -1125,46 +1151,58 @@ public class Interface extends JFrame{
 		
 		myUnbImageLabel = new JLabel("");
 		Image myImgUNB = new ImageIcon(this.getClass().getResource("/unb_logo_white.png")).getImage();
-		myUnbImageScaled = myImgUNB.getScaledInstance(210, 130, java.awt.Image.SCALE_SMOOTH);
+		myUnbImageScaled = myImgUNB.getScaledInstance(220, 110, java.awt.Image.SCALE_SMOOTH);
 		myUnbIconScaled = new ImageIcon(myUnbImageScaled);
 		myUnbImageLabel.setIcon(myUnbIconScaled);
 
 		myBottomPanelLeftConstraints = new GridBagConstraints();
 		myBottomPanelLeftConstraints.fill = GridBagConstraints.BOTH;
-//		myBottomPanelLeftConstraints.gridheight = GridBagConstraints.REMAINDER;
-//		myBottomPanelLeftConstraints.gridwidth = GridBagConstraints.REMAINDER;
 		myBottomPanelLeftConstraints.weightx = 0.5;
 		myBottomPanelLeftConstraints.weighty = 1;
 		
+		
 		myBottomPanelLeftConstraints.gridx = 0;
-		myBottomPanelLeftConstraints.gridy = 0;
+		myBottomPanelLeftConstraints.gridy = 1;
 		myPostsBottomPanelLeft.add(leftTop, myBottomPanelLeftConstraints);
 		
+		myBottomPanelLeftConstraints.weightx = 0.5;
+		myBottomPanelLeftConstraints.weighty = 0;
+		myBottomPanelLeftConstraints.gridx = 0;
+		myBottomPanelLeftConstraints.gridy = 0;
+		myBottomPanelLeftConstraints.insets = new Insets(20, 100, 20, 20);
+		JLabel postLabel = new JLabel("Your Posts");
+		postLabel.setFont(new Font("Georgia", Font.PLAIN, 27));
+		myPostsBottomPanelLeft.add(postLabel, myBottomPanelLeftConstraints);
+		myBottomPanelLeftConstraints.insets = new Insets(0, 0, 0, 0);
+
+	
 		leftBottom = new JPanel(new GridBagLayout());
 		GridBagConstraints leftBottomConstraints = new GridBagConstraints();
 
 		leftBottom.setPreferredSize(new Dimension(200,200));
 		leftBottom.setBackground(new Color(215, 215, 215));
 		
-//		leftBottomConstraints.insets = new Insets(0,0,0,50);
 		leftBottomConstraints.gridx = 0;
 		leftBottomConstraints.gridy = 0;
-		leftBottomConstraints.anchor = GridBagConstraints.LINE_END;
+		leftBottomConstraints.weightx = 0.5;
+		leftBottomConstraints.weighty = 0.5;
+		leftBottomConstraints.insets = new Insets(15,15,15,15);
+		leftBottomConstraints.anchor = GridBagConstraints.LINE_START;
 		
 		leftBottom.add(myUnbImageLabel, leftBottomConstraints);
 		
-//		leftBottomConstraints.insets = new Insets(0,50,0,0);
 		leftBottomConstraints.gridx = 1;
 		leftBottomConstraints.gridy = 0;
-//		leftBottomConstraints.anchor = GridBagConstraints.LINE_END;
+		leftBottomConstraints.insets = new Insets(15,15,15,0);
 		
 		leftBottom.add(deletePost, leftBottomConstraints);
 		
 		myBottomPanelLeftConstraints.weightx = 0.5;
 		myBottomPanelLeftConstraints.weighty = 0;
 		myBottomPanelLeftConstraints.gridx = 0;
-		myBottomPanelLeftConstraints.gridy = 1;
+		myBottomPanelLeftConstraints.gridy = 2;
 		myPostsBottomPanelLeft.add(leftBottom, myBottomPanelLeftConstraints);
+		
 		
 		deletePost.addActionListener(new ActionListener() {
 			@Override
@@ -1174,6 +1212,7 @@ public class Interface extends JFrame{
 					try {
 						Integer pId = p.getPostId();
 						logic.delete(pId);
+						JOptionPane.showMessageDialog(frame, "You have deleted this post. Return to View All Posts to update the list.");
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -1363,6 +1402,7 @@ public class Interface extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 					rdoSenior.setSelected(false);
 					rdoStudent.setSelected(false);
+					btnGroup.clearSelection();
 					cardLayout.show(cardPanel, "2");	
 					Object[] postsTest = null;
 					try {
@@ -1604,9 +1644,7 @@ public class Interface extends JFrame{
 			}
 		});
 				
-		adminPanel.setLayout(new GridBagLayout());
 		cardPanel.add(viewPostingsPanel, "2");
-		cardPanel.add(adminPanel, "3");
 		cardLayout.show(cardPanel, "1");
 	//end Add Post
 

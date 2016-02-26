@@ -1,6 +1,7 @@
 package applogic;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -60,7 +61,7 @@ public class Logic {
 		}
 		
 		Date now = new Date();
-		now.setTime(System.currentTimeMillis());
+		now.setTime(System.currentTimeMillis()-24*60*60*1000);
 		if (date == null || date.before(now)) {
 			errorMessage += "The date must be on or after today.\n";
 			isError = true;
@@ -147,7 +148,7 @@ public class Logic {
 			ret += response.toString() + "\n";
 		}
 		if (ret.isEmpty()) {
-			ret = "You have not recieved any responses to this post.";
+			ret = "You have not recieved any responses.";
 		}
 		return ret;
 	}

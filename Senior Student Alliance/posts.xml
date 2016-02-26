@@ -1,3 +1,10 @@
 <?xml version="1.0"?>
 <posts>
+<Post>
+	<postId>1</postId>
+	<wanted>asdas</wanted>
+	<offer>dsadas</offer>
+	<user>student</user>
+	<date>1456459200000</date>
+</Post>
 </posts>
