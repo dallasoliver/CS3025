@@ -17,6 +17,7 @@ import java.awt.event.MouseEvent;
 import java.util.Date;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -66,7 +67,6 @@ public class Interface extends JFrame{
 	private JLabel unbImageLabel;
 	private Image unbImageScaled;
 	private ImageIcon unbIconScaled;
-
 	
 	//view all posts
 	private JPanel viewPostingsPanel;
@@ -86,10 +86,13 @@ public class Interface extends JFrame{
 	private JPanel allPostsBottomPanel;
 	private GridBagConstraints bottomPanelConstraints;
 	private JPanel allPostsBottomPanelLeft;
+	private JPanel leftTop;
+	private JPanel leftBottom;
 	private GridBagConstraints bottomPanelLeftConstraints;
 	private JPanel allPostsBottomPanelRight;
 	private GridBagConstraints bottomPanelRightConstraints;
 	private JLabel noPostsAddedLbl;
+	private JScrollPane scrollPaneForList;
 
 	//view my posts/responses
 	private JLabel responseLbl;
@@ -102,8 +105,24 @@ public class Interface extends JFrame{
 	private JPanel responsesPane;
 	private JTextArea responsesText;
 	private JScrollPane respScrollPane;
-	private JButton logoutMyPosts;
-	private JScrollPane scrollPaneForList;
+	private JButton logoutMyPostsBtn;
+	private JButton helpMyPostsBtn;
+	private JScrollPane myPostsScrollPane;
+	private JButton deletePost;
+	private GridBagConstraints myPostsConstraints;
+	private JPanel myPostsBottomPanel;
+	private GridBagConstraints myBottomPanelConstraints;
+	private JPanel myPostsBottomPanelLeft;
+	private GridBagConstraints myBottomPanelLeftConstraints;
+	private JPanel myPostsBottomPanelRight;
+	private GridBagConstraints myBottomPanelRightConstraints;
+	private JPanel myPostsRedPanel;
+	private JPanel myPostsBlackPanel;
+	private JLabel myUnbImageLabel;
+	private Image myUnbImageScaled;
+	private ImageIcon myUnbIconScaled;
+	private JLabel myPostsTitle;
+	private JButton myBackToViewAllPostsBtn;
 	
 	//add new post
 	private JPanel addPostsBottomPanel;
@@ -148,8 +167,11 @@ public class Interface extends JFrame{
 		lblPassword = new JLabel("Password");
 		cardLayout = new CardLayout();
 		btnSubmit = new JButton("Submit");
-		allPostsListPane = new JPanel();
 		postPane = new JPanel();
+		postPane.setBackground(new Color(255, 255, 255));
+		postPane.setPreferredSize(new Dimension (600,300));
+		postPane.setBorder(new LineBorder(Color.BLACK, 3));
+		allPostsListPane = new JPanel();
 		logoImageLabel = new JLabel("");
 		Image img = new ImageIcon(this.getClass().getResource("/image1.png")).getImage();
 		logoImageScaled = img.getScaledInstance(600, 400, java.awt.Image.SCALE_SMOOTH);
@@ -157,6 +179,9 @@ public class Interface extends JFrame{
 		logoImageLabel.setIcon(logoIconScaled);
 		cardPanel.setLayout(cardLayout);
 		loginPanel.setLayout(new GridBagLayout());
+		
+		contact = new JTextField();
+		message = new JTextField();
 		
 		noPostsAddedLbl = new JLabel("No posts have been added yet!");
 		noPostsAddedLbl.setFont(new Font("Georgia", Font.PLAIN, 20));
@@ -210,14 +235,12 @@ public class Interface extends JFrame{
 		btnSubmit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (textFieldUsername.getText().equals("admin") && textFieldPassword.getPassword().equals("admin")) {
-					cardLayout.show(cardPanel, "3");
-				} else if ((textFieldUsername.getText().equals("senior") && textFieldPassword.getPassword().equals("senior")) || (textFieldUsername.getText().equals("student") && textFieldPassword.getText().equals("student"))) {
+				if ((textFieldUsername.getText().equals("senior") && textFieldPassword.getText().equals("senior")) || (textFieldUsername.getText().equals("student") && textFieldPassword.getText().equals("student"))) {
 					if (textFieldUsername.getText().equals("senior")) {
-						userType = "Senior";
+						userType = "senior";
 					}
 					if (textFieldUsername.getText().equals("student")) {
-						userType = "Student";
+						userType = "student";
 					}
 					
 					textFieldUsername.setText(null);
@@ -279,28 +302,35 @@ public class Interface extends JFrame{
 				            	Post p = (Post)(allPostsList.getSelectedValue());
 				            	Integer pId = p.getPostId();
 				            	
-				            	Object[] response = {
-				            	    "Response:", message,
-				            	    "Contact Info:", contact
-				            	};
-				            	
-				            	Object[] options = {"RESPOND", "REPORT", "CANCEL"};
-				            	int option = JOptionPane.showOptionDialog(null, "Click OK to continue", "Warning",
-				                        JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
-				            	
-				            	if (option == JOptionPane.YES_OPTION) {
-							    	int opt = JOptionPane.showConfirmDialog(null, response, "Respond To Post", JOptionPane.OK_CANCEL_OPTION);
-					            	if (opt == JOptionPane.OK_OPTION) {
-					            		try {
-											logic.addResponse(message.getText(), contact.getText(), pId);
-										} catch (Exception e) {
-											// TODO Auto-generated catch block
-											e.printStackTrace();
-										}
+				            	if (!p.getUser().equalsIgnoreCase(userType)) {
+					            	Object[] response = {
+					            	    "Response:", message,
+					            	    "Contact Info:", contact
+					            	};
+					            	
+					            	Object[] options = {"RESPOND", "REPORT", "CANCEL"};
+					            	int option = JOptionPane.showOptionDialog(null, "Click OK to continue", "Warning",
+					                        JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+					            	
+					            	if (option == JOptionPane.YES_OPTION) {
+								    	int opt = JOptionPane.showConfirmDialog(null, response, "Respond To Post", JOptionPane.OK_CANCEL_OPTION);
+						            	if (opt == JOptionPane.OK_OPTION) {
+						            		try {
+												logic.addResponse(message.getText(), contact.getText(), pId);
+												message.setText(null);
+												contact.setText(null);
+											} catch (Exception e) {
+												// TODO Auto-generated catch block
+												e.printStackTrace();
+											}
+						            	}
 					            	}
-				            	}
-				            	if (option == JOptionPane.NO_OPTION) {
-				            		JOptionPane.showMessageDialog(null, "This post has been reported", "Report", JOptionPane.OK_OPTION);
+					            	if (option == JOptionPane.NO_OPTION) {
+					            		JOptionPane.showMessageDialog(null, "This post has been reported", "Report", JOptionPane.OK_OPTION);
+					            	}
+				            	} else {
+				            		String s = "Sorry, you cannot respond to fellow " + userType + " posts.";
+				            		JOptionPane.showMessageDialog(null, s, "Report", JOptionPane.OK_OPTION);
 				            	}
 						    }
 						}
@@ -326,7 +356,6 @@ public class Interface extends JFrame{
 		
 
 	//view posting start
-		
 		//--------nav bar-------
 		logoutAllPostsBtn = new JButton("<html><u>Logout</u></html>") {
 			@Override
@@ -405,18 +434,224 @@ public class Interface extends JFrame{
 		allPostsBottomPanelRight.setBackground(new Color(215, 215, 215));
 
 		btnGroup = new ButtonGroup();
-		rdoSenior = new JRadioButton("Senior");
+		rdoSenior = new JRadioButton("Senior Posts");
 		rdoSenior.setFont(new Font("Georgia", Font.PLAIN, 20));
 		
-		rdoStudent = new JRadioButton("Student");
+		rdoStudent = new JRadioButton("Student Posts");
 		rdoStudent.setFont(new Font("Georgia", Font.PLAIN, 20));
 
 		btnGroup.add(rdoSenior);
 		btnGroup.add(rdoStudent);
 		
+		rdoSenior.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Object[] postsTest = null;
+				try {
+					postsTest = logic.filterBySeniorUser(userType);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				if (postsTest != null) {
+					allPostsList = new JList(postsTest) {
+						@Override
+			            public JToolTip createToolTip() {
+			                JToolTip toolTip = super.createToolTip();
+			                toolTip.setFont(new Font("Georgia", Font.PLAIN, 17));
+			                toolTip.setBackground(Color.BLACK);
+			                toolTip.setForeground(Color.WHITE);
+
+			                return toolTip;
+			            }
+					};
+					
+					allPostsList.setBackground(new Color(255, 255, 255));
+					allPostsList.setCellRenderer(new PostCellRenderer());
+					allPostsList.setVisibleRowCount(4);
+					allPostsList.setToolTipText("Click the post to view options to RESPOND or REPORT");
+					
+					scrollPaneForList = new JScrollPane(allPostsList);
+					scrollPaneForList.setPreferredSize(new Dimension (650,295));
+					scrollPaneForList.setBorder(null);
+					
+					allPostsListPane.removeAll();
+					allPostsListPane.add(scrollPaneForList);
+					allPostsListPane.validate();
+					allPostsListPane.repaint();
+					repaint();
+					frame.repaint();
+					scrollPaneForList.repaint();
+					
+				} else {
+					allPostsList = new JList();
+					allPostsListPane.removeAll();
+					allPostsListPane.add(noPostsAddedLbl);
+					allPostsListPane.repaint();
+					repaint();
+					frame.repaint();
+					scrollPaneForList.repaint();
+				}
+				bottomPanelRightConstraints.gridheight = GridBagConstraints.REMAINDER;
+				bottomPanelRightConstraints.gridwidth = GridBagConstraints.REMAINDER;
+				bottomPanelRightConstraints.anchor = GridBagConstraints.CENTER;
+				bottomPanelRightConstraints.insets = new Insets(30,30,30,30); 
+				bottomPanelRightConstraints.fill = GridBagConstraints.BOTH;
+				bottomPanelRightConstraints.weighty = 1;
+				bottomPanelRightConstraints.weightx = 1;
+				bottomPanelRightConstraints.gridx = 0;
+				bottomPanelRightConstraints.gridy = 1;
+				allPostsBottomPanelRight.add(allPostsListPane, bottomPanelRightConstraints);
+
+				allPostsList.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent evt) {
+					    if (evt.getClickCount() == 1) {
+					    	
+			            	Post p = (Post)(allPostsList.getSelectedValue());
+			            	Integer pId = p.getPostId();
+			            	
+			            	if (!p.getUser().equalsIgnoreCase(userType)) {
+				            	Object[] response = {
+				            	    "Response:", message,
+				            	    "Contact Info:", contact
+				            	};
+				            	
+				            	Object[] options = {"RESPOND", "REPORT", "CANCEL"};
+				            	int option = JOptionPane.showOptionDialog(null, "Click OK to continue", "Warning",
+				                        JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+				            	
+				            	if (option == JOptionPane.YES_OPTION) {
+							    	int opt = JOptionPane.showConfirmDialog(null, response, "Respond To Post", JOptionPane.OK_CANCEL_OPTION);
+					            	if (opt == JOptionPane.OK_OPTION) {
+					            		try {
+											logic.addResponse(message.getText(), contact.getText(), pId);
+											message.setText(null);
+											contact.setText(null);
+										} catch (Exception e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
+					            	}
+				            	}
+				            	if (option == JOptionPane.NO_OPTION) {
+				            		JOptionPane.showMessageDialog(null, "This post has been reported", "Report", JOptionPane.OK_OPTION);
+				            	}
+			            	} else {
+			            		String s = "Sorry, you cannot respond to fellow " + userType + " posts.";
+			            		JOptionPane.showMessageDialog(null, s, "Report", JOptionPane.OK_OPTION);
+			            	}
+					    }
+					}
+				});				
+			}
+		});
+		
+		rdoStudent.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Object[] postsTest = null;
+				try {
+					postsTest = logic.filterByStudentUser(userType);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				if (postsTest != null) {
+					allPostsList = new JList(postsTest) {
+						@Override
+			            public JToolTip createToolTip() {
+			                JToolTip toolTip = super.createToolTip();
+			                toolTip.setFont(new Font("Georgia", Font.PLAIN, 17));
+			                toolTip.setBackground(Color.BLACK);
+			                toolTip.setForeground(Color.WHITE);
+
+			                return toolTip;
+			            }
+					};
+					
+					allPostsList.setBackground(new Color(255, 255, 255));
+					allPostsList.setCellRenderer(new PostCellRenderer());
+					allPostsList.setVisibleRowCount(4);
+					allPostsList.setToolTipText("Click the post to view options to RESPOND or REPORT");
+					
+					scrollPaneForList = new JScrollPane(allPostsList);
+					scrollPaneForList.setPreferredSize(new Dimension (650,295));
+					scrollPaneForList.setBorder(null);
+					
+					allPostsListPane.removeAll();
+					allPostsListPane.add(scrollPaneForList);
+					allPostsListPane.validate();
+					allPostsListPane.repaint();
+					repaint();
+					frame.repaint();
+					scrollPaneForList.repaint();
+					
+				} else {
+					allPostsList = new JList();
+					allPostsListPane.removeAll();
+					allPostsListPane.add(noPostsAddedLbl);
+					allPostsListPane.repaint();
+					repaint();
+					frame.repaint();
+					scrollPaneForList.repaint();
+				}
+				bottomPanelRightConstraints.gridheight = GridBagConstraints.REMAINDER;
+				bottomPanelRightConstraints.gridwidth = GridBagConstraints.REMAINDER;
+				bottomPanelRightConstraints.anchor = GridBagConstraints.CENTER;
+				bottomPanelRightConstraints.insets = new Insets(30,30,30,30); 
+				bottomPanelRightConstraints.fill = GridBagConstraints.BOTH;
+				bottomPanelRightConstraints.weighty = 1;
+				bottomPanelRightConstraints.weightx = 1;
+				bottomPanelRightConstraints.gridx = 0;
+				bottomPanelRightConstraints.gridy = 1;
+				allPostsBottomPanelRight.add(allPostsListPane, bottomPanelRightConstraints);
+
+				allPostsList.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent evt) {
+					    if (evt.getClickCount() == 1) {
+					    	
+			            	Post p = (Post)(allPostsList.getSelectedValue());
+			            	Integer pId = p.getPostId();
+			            	
+			            	if (!p.getUser().equalsIgnoreCase(userType)) {
+				            	Object[] response = {
+				            	    "Response:", message,
+				            	    "Contact Info:", contact
+				            	};
+				            	
+				            	Object[] options = {"RESPOND", "REPORT", "CANCEL"};
+				            	int option = JOptionPane.showOptionDialog(null, "Click OK to continue", "Warning",
+				                        JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+				            	
+				            	if (option == JOptionPane.YES_OPTION) {
+							    	int opt = JOptionPane.showConfirmDialog(null, response, "Respond To Post", JOptionPane.OK_CANCEL_OPTION);
+					            	if (opt == JOptionPane.OK_OPTION) {
+					            		try {
+											logic.addResponse(message.getText(), contact.getText(), pId);
+											message.setText(null);
+											contact.setText(null);
+										} catch (Exception e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
+					            	}
+				            	}
+				            	if (option == JOptionPane.NO_OPTION) {
+				            		JOptionPane.showMessageDialog(null, "This post has been reported", "Report", JOptionPane.OK_OPTION);
+				            	}
+			            	} else {
+			            		String s = "Sorry, you cannot respond to fellow " + userType + " posts.";
+			            		JOptionPane.showMessageDialog(null, s, "Report", JOptionPane.OK_OPTION);
+			            	}
+					    }
+					}
+				});				
+			}
+		});
+		
 		bottomPanelRightConstraints = new GridBagConstraints();
 		
-		JLabel filterBy = new JLabel("Filter By:") {
+		JLabel filterBy = new JLabel("View Only:") {
 			@Override
             public JToolTip createToolTip() {
                 JToolTip toolTip = super.createToolTip();
@@ -462,7 +697,6 @@ public class Interface extends JFrame{
                 toolTip.setFont(new Font("Georgia", Font.PLAIN, 17));
                 toolTip.setBackground(Color.BLACK);
                 toolTip.setForeground(Color.WHITE);
-
                 return toolTip;
             }
 		};
@@ -476,7 +710,6 @@ public class Interface extends JFrame{
                 toolTip.setFont(new Font("Georgia", Font.PLAIN, 17));
                 toolTip.setBackground(Color.BLACK);
                 toolTip.setForeground(Color.WHITE);
-
                 return toolTip;
             }
 		};
@@ -514,7 +747,7 @@ public class Interface extends JFrame{
 		
 		allPostsBottomPanel = new JPanel(new GridBagLayout());
 		allPostsBottomPanel.setPreferredSize(new Dimension(300,600));
-		allPostsBottomPanel.setBackground(new Color(228, 228, 228));
+		allPostsBottomPanel.setBackground(new Color(215, 215, 215));
 		
 		bottomPanelConstraints = new GridBagConstraints();
 		
@@ -566,6 +799,15 @@ public class Interface extends JFrame{
 			}
 		});
 		
+		leftTop = new JPanel();
+		leftTop.setPreferredSize(new Dimension(500,500));
+		leftTop.setBackground(new Color(215, 215, 215));
+		
+//		leftTop.setLayout(new BorderLayout());
+//		JLabel postLabel = new JLabel("My Posts");
+//	    leftTop.add(postLabel, BorderLayout.NORTH);
+
+		
 		goToMyPostsBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -579,43 +821,63 @@ public class Interface extends JFrame{
 				
 				if (postsTest != null) {
 					postResponseList = new JList(postsTest);
-					postResponseList.setBackground(new Color(247, 247, 247));
+					postResponseList.setBackground(new Color(255, 255, 255));
 					postResponseList.setCellRenderer(new PostCellRenderer());
-					postResponseList.setVisibleRowCount(7);
+					
+					myPostsScrollPane = new JScrollPane(postResponseList);
+					myPostsScrollPane.setPreferredSize(new Dimension (590,270));
+					myPostsScrollPane.setBorder(null);
+					
 					postPane.removeAll();
-					postPane.add(postResponseList);
 					
-					postResponseList.addMouseListener(new MouseAdapter() {
-						@Override
-						public void mouseClicked(MouseEvent evt) {
-						    if (evt.getClickCount() == 1) {
-				            	Post p = (Post)(postResponseList.getSelectedValue());
-				            	Integer pId = p.getPostId();
-				            	try {
-				            	
-				            	if (logic.countResponses(pId) > 2) {
-
-				    				int opt = JOptionPane.showConfirmDialog(frame, p, "Have you completed this task yet? Click Yes to delete the post.", JOptionPane.YES_NO_OPTION);
-
-				            	}
-								responsesText.setText(logic.showResponses(pId));
-								}catch(Exception e) {
-//									JOptionPane.showMessageDialog(compareWorkoutsPanel,
-//											e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-								}
-//								responsesPane.removeAll();
-						    }
-						}
-					});
+					postPane.add(myPostsScrollPane);
+					postPane.repaint();
 					
-					respScrollPane.setViewportView(responsesText);
-					responsesPane.add(respScrollPane);
-				    viewMyPostsPanel.add(responsesPane);
-				    
 				} else {
-					postPane.add(new JLabel("You have not posted anything yet!"));
+					postPane.removeAll();
+					postPane.add(new JLabel());
+					postResponseList = new JList();
 				}
-			    viewMyPostsPanel.add(postPane);
+				respScrollPane.setPreferredSize(new Dimension(450,350));
+				respScrollPane.setViewportView(responsesText);
+				responsesPane.removeAll();
+				responsesPane.add(respScrollPane);
+				
+				postResponseList.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent evt) {
+					    if (evt.getClickCount() == 1) {
+			            	Post p = (Post)(postResponseList.getSelectedValue());
+			            	Integer pId = p.getPostId();
+			            	int opt = -1;
+			            	try {
+			            		responsesText.setText(logic.showResponses(pId));
+				            	if (logic.countResponses(pId) > 2) {
+				    				opt = JOptionPane.showConfirmDialog(postPane, "Have you completed this task yet? Click Yes to delete the post.", "Have you completed this task yet?", JOptionPane.YES_NO_OPTION);
+				            	}
+								if (opt == 0) {
+									logic.delete(pId);
+									responsesText.setText(null);
+									postResponseList.repaint();
+									postPane.repaint();
+									repaint();
+									frame.repaint();
+									scrollPaneForList.repaint();
+								}
+							}catch(Exception e) {
+//								JOptionPane.showMessageDialog(compareWorkoutsPanel,
+//										e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+							}
+					    }
+					}
+				});
+			
+				
+			    leftTop.add(postPane);
+			   
+			    myBottomPanelRightConstraints.gridx = 0;
+			    myBottomPanelRightConstraints.gridy = 0;
+			    myPostsBottomPanelRight.add(responsesPane, myBottomPanelRightConstraints);
 			}
 		});
 		
@@ -639,9 +901,8 @@ public class Interface extends JFrame{
 		
 		viewMyPostsPanel = new JPanel();
 		responseLbl = new JLabel();
-		contact = new JTextField();
-		message = new JTextField();
 		responsesPane = new JPanel();
+		responsesPane.setBackground(new Color(215,215,215));
 		responsesText = new JTextArea();
 		respScrollPane = new JScrollPane();
 		
@@ -649,11 +910,344 @@ public class Interface extends JFrame{
 		responsesText.setEditable(false);
 		responsesText.setWrapStyleWord(true);
 		responsesText.setLineWrap(true);
-		responsesText.setForeground(Color.DARK_GRAY);
+		responsesText.setForeground(Color.BLACK);
 		responsesText.setFont(new Font("Microsoft Tai Le", Font.PLAIN, 14));
 		responsesText.setBackground(Color.WHITE);
 		
+		deletePost = new JButton("Delete Post");
+		deletePost.setPreferredSize(new Dimension(100,20));
+		
+		
+		logoutMyPostsBtn = new JButton("<html><u>Logout</u></html>") {
+			@Override
+            public JToolTip createToolTip() {
+                JToolTip toolTip = super.createToolTip();
+                toolTip.setFont(new Font("Georgia", Font.PLAIN, 17));
+                toolTip.setBackground(Color.BLACK);
+                toolTip.setForeground(Color.WHITE);
+
+                return toolTip;
+            }
+		};
+		logoutMyPostsBtn.setFont(new Font("Georgia", Font.PLAIN, 24));
+		logoutMyPostsBtn.setPreferredSize(new Dimension(120, 40));
+		logoutMyPostsBtn.setBorder(null);
+		logoutMyPostsBtn.setBackground(new Color(205, 0, 0));
+		logoutMyPostsBtn.setForeground(Color.WHITE);
+		logoutMyPostsBtn.setToolTipText("Click to logout of the website");
+		
+		helpMyPostsBtn = new JButton("<html><u>Help</u></html>") {
+			@Override
+            public JToolTip createToolTip() {
+                JToolTip toolTip = super.createToolTip();
+                toolTip.setFont(new Font("Georgia", Font.PLAIN, 17));
+                toolTip.setBackground(Color.BLACK);
+                toolTip.setForeground(Color.WHITE);
+
+                return toolTip;
+            }
+		};
+		helpMyPostsBtn.setFont(new Font("Georgia", Font.PLAIN, 24));
+		helpMyPostsBtn.setPreferredSize(new Dimension(120, 40));
+		helpMyPostsBtn.setBorder(null);
+		helpMyPostsBtn.setBackground(new Color(205, 0, 0));
+		helpMyPostsBtn.setForeground(Color.WHITE);
+		helpMyPostsBtn.setToolTipText("Click to learn how to find the instructions on this webpage");
+
+		myBackToViewAllPostsBtn = new JButton("<html><u>Back to View All Posts</u></html>") {
+			@Override
+            public JToolTip createToolTip() {
+                JToolTip toolTip = super.createToolTip();
+                toolTip.setFont(new Font("Georgia", Font.PLAIN, 17));
+                toolTip.setBackground(Color.BLACK);
+                toolTip.setForeground(Color.WHITE);
+
+                return toolTip;
+            }
+		};
+		myBackToViewAllPostsBtn.setFont(new Font("Georgia", Font.PLAIN, 24));
+		myBackToViewAllPostsBtn.setPreferredSize(new Dimension(260, 40));
+		myBackToViewAllPostsBtn.setBorder(null);
+		myBackToViewAllPostsBtn.setBackground(new Color(205, 0, 0));
+		myBackToViewAllPostsBtn.setForeground(Color.WHITE);
+		myBackToViewAllPostsBtn.setToolTipText("Click to return to the page to view all posts.");
+		
+		myBackToViewAllPostsBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				rdoSenior.setSelected(false);
+				rdoStudent.setSelected(false);
+				cardLayout.show(cardPanel, "2");	
+				Object[] postsTest = null;
+				try {
+					postsTest = logic.showAll();
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				if (postsTest != null) {
+					allPostsList = new JList(postsTest) {
+						@Override
+			            public JToolTip createToolTip() {
+			                JToolTip toolTip = super.createToolTip();
+			                toolTip.setFont(new Font("Georgia", Font.PLAIN, 17));
+			                toolTip.setBackground(Color.BLACK);
+			                toolTip.setForeground(Color.WHITE);
+
+			                return toolTip;
+			            }
+					};
+					allPostsList.setBackground(new Color(255, 255, 255));
+					allPostsList.setCellRenderer(new PostCellRenderer());
+					allPostsList.setVisibleRowCount(4);
+					allPostsList.setToolTipText("Click the post to view options to RESPOND or REPORT");
+					
+					scrollPaneForList = new JScrollPane(allPostsList);
+					scrollPaneForList.setPreferredSize(new Dimension (650,295));
+					scrollPaneForList.setBorder(null);
+					
+					allPostsListPane.removeAll();
+					allPostsListPane.add(scrollPaneForList);
+					
+				} else {
+					allPostsListPane.removeAll();
+					allPostsListPane.add(noPostsAddedLbl);
+					allPostsList = new JList();
+				}
+
+				allPostsList.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent evt) {
+					    if (evt.getClickCount() == 1) {
+					    	
+			            	Post p = (Post)(allPostsList.getSelectedValue());
+			            	Integer pId = p.getPostId();
+			            	
+			            	if (!p.getUser().equalsIgnoreCase(userType)) {
+				            	Object[] response = {
+				            	    "Response:", message,
+				            	    "Contact Info:", contact
+				            	};
+				            	
+				            	Object[] options = {"RESPOND", "REPORT", "CANCEL"};
+				            	int option = JOptionPane.showOptionDialog(null, "Click OK to continue", "Warning",
+				                        JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+				            	
+				            	if (option == JOptionPane.YES_OPTION) {
+							    	int opt = JOptionPane.showConfirmDialog(null, response, "Respond To Post", JOptionPane.OK_CANCEL_OPTION);
+					            	if (opt == JOptionPane.OK_OPTION) {
+					            		try {
+											logic.addResponse(message.getText(), contact.getText(), pId);
+											message.setText(null);
+											contact.setText(null);
+										} catch (Exception e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
+					            	}
+				            	}
+				            	
+				            	if (option == JOptionPane.NO_OPTION) {
+				            		JOptionPane.showMessageDialog(null, "This post has been reported", "Report", JOptionPane.OK_OPTION);
+				            	}
+			            	} else {
+			            		String s = "Sorry, you cannot respond to fellow " + userType + " posts.";
+			            		JOptionPane.showMessageDialog(null, s, "Report", JOptionPane.OK_OPTION);
+			            	}
+					    }
+					}
+				});
+			}
+		});
+		
+		JPanel myButtonPanel = new JPanel();
+		myButtonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		myButtonPanel.add(helpMyPostsBtn);
+		myButtonPanel.add(logoutMyPostsBtn);
+		myButtonPanel.setOpaque(false);
+		
+		JPanel myBackButtonPanelAdd = new JPanel();
+		myBackButtonPanelAdd.setLayout(new FlowLayout(FlowLayout.LEFT));
+		myBackButtonPanelAdd.add(myBackToViewAllPostsBtn);
+		myBackButtonPanelAdd.setOpaque(false);
+		
+		myPostsRedPanel = new JPanel();
+		myPostsRedPanel.setPreferredSize(new Dimension(300,80));
+		myPostsRedPanel.setBackground(new Color(205, 0, 0));
+		myPostsRedPanel.setLayout(new GridBagLayout());
+		
+		GridBagConstraints myRedPanelConstraints = new GridBagConstraints();
+		myRedPanelConstraints.weightx = 0.5;
+		myRedPanelConstraints.weighty = 0.5;
+		myRedPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
+
+		myRedPanelConstraints.gridx = 0;
+		myRedPanelConstraints.gridy = 0;
+		myPostsRedPanel.add(myBackButtonPanelAdd, myRedPanelConstraints);
+		
+		redPanelConstraints.gridx = 1;
+		redPanelConstraints.gridy = 0;
+		myPostsRedPanel.add(myButtonPanel, myRedPanelConstraints);
+
+        
+        viewMyPostsPanel.setLayout(new GridBagLayout());
+        viewMyPostsPanel.setBackground(new Color(215, 215, 215));
+		
+		//--------title bar-------
+		
+		myPostsTitle = new JLabel("View My Posts & Responses");
+		myPostsTitle.setFont(new Font("Georgia", Font.PLAIN, 60));
+		myPostsTitle.setForeground(Color.WHITE);
+		
+		myPostsBlackPanel = new JPanel(new BorderLayout());
+		myPostsBlackPanel.setPreferredSize(new Dimension(300,60));
+		myPostsBlackPanel.setBackground(new Color(0, 0, 0));
+		myPostsBlackPanel.add(myPostsTitle, BorderLayout.WEST);
+		
+		//--------right-------
+
+		myPostsBottomPanelRight = new JPanel(new GridBagLayout());
+		myPostsBottomPanelRight.setPreferredSize(new Dimension(600,600));
+		myPostsBottomPanelRight.setBackground(new Color(215, 215, 215));
+		
+		myBottomPanelRightConstraints = new GridBagConstraints();
+		myBottomPanelRightConstraints.weightx = 0.2;
+		myBottomPanelRightConstraints.weighty = 0.2;
+
+		myBottomPanelRightConstraints.gridheight = GridBagConstraints.REMAINDER;
+		myBottomPanelRightConstraints.insets = new Insets(30,30,30,30); 
+		myBottomPanelRightConstraints.fill = GridBagConstraints.BOTH;
+
+		//--------left-------
+		
+		myPostsBottomPanelLeft = new JPanel(new GridBagLayout());
+		myPostsBottomPanelLeft.setPreferredSize(new Dimension(600,600));
+		myPostsBottomPanelLeft.setBackground(new Color(215, 215, 215));
+		
+		myUnbImageLabel = new JLabel("");
+		Image myImgUNB = new ImageIcon(this.getClass().getResource("/unb_logo_white.png")).getImage();
+		myUnbImageScaled = myImgUNB.getScaledInstance(210, 130, java.awt.Image.SCALE_SMOOTH);
+		myUnbIconScaled = new ImageIcon(myUnbImageScaled);
+		myUnbImageLabel.setIcon(myUnbIconScaled);
+
+		myBottomPanelLeftConstraints = new GridBagConstraints();
+		myBottomPanelLeftConstraints.fill = GridBagConstraints.BOTH;
+//		myBottomPanelLeftConstraints.gridheight = GridBagConstraints.REMAINDER;
+//		myBottomPanelLeftConstraints.gridwidth = GridBagConstraints.REMAINDER;
+		myBottomPanelLeftConstraints.weightx = 0.5;
+		myBottomPanelLeftConstraints.weighty = 1;
+		
+		myBottomPanelLeftConstraints.gridx = 0;
+		myBottomPanelLeftConstraints.gridy = 0;
+		myPostsBottomPanelLeft.add(leftTop, myBottomPanelLeftConstraints);
+		
+		leftBottom = new JPanel(new GridBagLayout());
+		GridBagConstraints leftBottomConstraints = new GridBagConstraints();
+
+		leftBottom.setPreferredSize(new Dimension(200,200));
+		leftBottom.setBackground(new Color(215, 215, 215));
+		
+//		leftBottomConstraints.insets = new Insets(0,0,0,50);
+		leftBottomConstraints.gridx = 0;
+		leftBottomConstraints.gridy = 0;
+		leftBottomConstraints.anchor = GridBagConstraints.LINE_END;
+		
+		leftBottom.add(myUnbImageLabel, leftBottomConstraints);
+		
+//		leftBottomConstraints.insets = new Insets(0,50,0,0);
+		leftBottomConstraints.gridx = 1;
+		leftBottomConstraints.gridy = 0;
+//		leftBottomConstraints.anchor = GridBagConstraints.LINE_END;
+		
+		leftBottom.add(deletePost, leftBottomConstraints);
+		
+		myBottomPanelLeftConstraints.weightx = 0.5;
+		myBottomPanelLeftConstraints.weighty = 0;
+		myBottomPanelLeftConstraints.gridx = 0;
+		myBottomPanelLeftConstraints.gridy = 1;
+		myPostsBottomPanelLeft.add(leftBottom, myBottomPanelLeftConstraints);
+		
+		deletePost.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Post p = (Post)(postResponseList.getSelectedValue());
+				if (p != null) {
+					try {
+						Integer pId = p.getPostId();
+						logic.delete(pId);
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				} else {
+					JOptionPane.showMessageDialog(frame, "Please select a post to delete.");
+				}
+			}
+			
+		});
+		
+		//--------bottom-------
+		
+		myPostsBottomPanel = new JPanel(new GridBagLayout());
+		myPostsBottomPanel.setPreferredSize(new Dimension(300,600));
+		myPostsBottomPanel.setBackground(new Color(215, 215, 215));
+		
+		myBottomPanelConstraints = new GridBagConstraints();
+		
+		myBottomPanelConstraints.fill = GridBagConstraints.BOTH;
+		myBottomPanelConstraints.gridheight = GridBagConstraints.REMAINDER;
+		
+		myBottomPanelConstraints.weightx = 0.5;
+		myBottomPanelConstraints.weighty = 0.5;
+		myBottomPanelConstraints.gridx = 0;
+		myBottomPanelConstraints.gridy = 0;
+		myPostsBottomPanel.add(myPostsBottomPanelLeft, myBottomPanelConstraints);
+
+		myBottomPanelConstraints.weightx = 0.5;
+		myBottomPanelConstraints.weighty = 0.5;
+		
+		myBottomPanelConstraints.gridx = 1;
+		myBottomPanelConstraints.gridy = 0;
+		myPostsBottomPanel.add(myPostsBottomPanelRight,  myBottomPanelConstraints);
+
+		myPostsConstraints = new GridBagConstraints();
+		
+		myPostsConstraints.weightx = 0.2;
+		myPostsConstraints.weighty = 0.2;
+		myPostsConstraints.anchor = GridBagConstraints.NORTH;
+		myPostsConstraints.gridwidth = GridBagConstraints.REMAINDER;
+		myPostsConstraints.fill = GridBagConstraints.BOTH;
+		
+		myPostsConstraints.gridx = 0;
+		myPostsConstraints.gridy = 0;
+		viewMyPostsPanel.add(myPostsRedPanel, myPostsConstraints);
+		
+		myPostsConstraints.gridx = 0;
+		myPostsConstraints.gridy = 1;
+		viewMyPostsPanel.add(myPostsBlackPanel, myPostsConstraints);
+
+		myPostsConstraints.weightx = 0.8;
+		myPostsConstraints.weighty = 0.8;
+		
+		myPostsConstraints.gridx = 0;
+		myPostsConstraints.gridy = 2;
+		viewMyPostsPanel.add(myPostsBottomPanel, myPostsConstraints);
+		
+		logoutMyPostsBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cardLayout.show(cardPanel, "1");
+			}
+		});
+		
+		helpMyPostsBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(frame, "Hover your cursor over elements on the page to show specific instructions for each element.");
+			}
+		});
+
 		cardPanel.add(viewMyPostsPanel, "5");
+
 	
 	//view my posts end	
 		
@@ -767,6 +1361,8 @@ public class Interface extends JFrame{
 		backToViewAllPostsBtn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+					rdoSenior.setSelected(false);
+					rdoStudent.setSelected(false);
 					cardLayout.show(cardPanel, "2");	
 					Object[] postsTest = null;
 					try {
@@ -812,31 +1408,37 @@ public class Interface extends JFrame{
 				            	Post p = (Post)(allPostsList.getSelectedValue());
 				            	Integer pId = p.getPostId();
 				            	
-				            	Object[] response = {
-				            	    "Response:", message,
-				            	    "Contact Info:", contact
-				            	};
-				            	
-				            	Object[] options = {"RESPOND", "REPORT", "CANCEL"};
-				            	int option = JOptionPane.showOptionDialog(null, "Click OK to continue", "Warning",
-				                        JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
-				            	
-				            	if (option == JOptionPane.YES_OPTION) {
-							    	int opt = JOptionPane.showConfirmDialog(null, response, "Respond To Post", JOptionPane.OK_CANCEL_OPTION);
-					            	if (opt == JOptionPane.OK_OPTION) {
-					            		try {
-											logic.addResponse(message.getText(), contact.getText(), pId);
-										} catch (Exception e) {
-											// TODO Auto-generated catch block
-											e.printStackTrace();
-										}
+				            	if (!p.getUser().equalsIgnoreCase(userType)) {
+					            	Object[] response = {
+					            	    "Response:", message,
+					            	    "Contact Info:", contact
+					            	};
+					            	
+					            	Object[] options = {"RESPOND", "REPORT", "CANCEL"};
+					            	int option = JOptionPane.showOptionDialog(null, "Click OK to continue", "Warning",
+					                        JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+					            	
+					            	if (option == JOptionPane.YES_OPTION) {
+								    	int opt = JOptionPane.showConfirmDialog(null, response, "Respond To Post", JOptionPane.OK_CANCEL_OPTION);
+						            	if (opt == JOptionPane.OK_OPTION) {
+						            		try {
+												logic.addResponse(message.getText(), contact.getText(), pId);
+												message.setText(null);
+												contact.setText(null);
+											} catch (Exception e) {
+												// TODO Auto-generated catch block
+												e.printStackTrace();
+											}
+						            	}
 					            	}
+					            	
+					            	if (option == JOptionPane.NO_OPTION) {
+					            		JOptionPane.showMessageDialog(null, "This post has been reported", "Report", JOptionPane.OK_OPTION);
+					            	}
+				            	} else {
+				            		String s = "Sorry, you cannot respond to fellow " + userType + " posts.";
+				            		JOptionPane.showMessageDialog(null, s, "Report", JOptionPane.OK_OPTION);
 				            	}
-				            	
-				            	if (option == JOptionPane.NO_OPTION) {
-				            		JOptionPane.showMessageDialog(null, "This post has been reported", "Report", JOptionPane.OK_OPTION);
-				            	}
-				            	
 						    }
 						}
 					});
@@ -868,8 +1470,8 @@ public class Interface extends JFrame{
 		redPanelAddConstraints.gridy = 0;
 		addPostsRedPanel.add(backButtonPanelAdd, redPanelAddConstraints);
 		
-		redPanelConstraints.gridx = 1;
-		redPanelConstraints.gridy = 0;
+		redPanelAddConstraints.gridx = 1;
+		redPanelAddConstraints.gridy = 0;
 		addPostsRedPanel.add(buttonPanelAdd, redPanelAddConstraints);
 		
 		addPostConstraints.weightx = 0.2;

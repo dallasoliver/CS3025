@@ -14,6 +14,7 @@ public class Logic {
 	private LinkedList<Response> responses;
 	private String configFilePost;
 	private String configFileResponse;
+	private int postIdCount = 0;
 
 
 	public Logic(String configFilePost, String configFileResponse) {
@@ -22,10 +23,25 @@ public class Logic {
 		this.configFileResponse = configFileResponse;
 		responses = ResponseParser.readConfig(configFileResponse);
 	}
+	
+	public void delete(int pId) throws Exception {
+	
+		Iterator<Post> it = posts.iterator();
+		while (it.hasNext()) {
+			Post post = it.next();
+			if (post.getPostId() == pId) {
+				posts.remove(post);
+			}
+		}
+		deletePostXML(-1);
+	}
 
 	public void addPost(String wanted, String offer, String user, Date date) throws Exception {
+		
 		String errorMessage = "The following errors have occurred:\n";
 		boolean isError = false;
+		postIdCount++;
+		
 
 		// Performs check for any errors in input.
 		if (wanted.isEmpty()) {
@@ -54,7 +70,7 @@ public class Logic {
 			throw new Exception(errorMessage);
 		}
 
-		Post newPost = new Post(wanted, offer, user, date);
+		Post newPost = new Post(wanted, offer, user, date, postIdCount);
 		posts.add(newPost);
 		savePostXML();
 	}
@@ -90,34 +106,38 @@ public class Logic {
 	private void savePostXML() throws Exception {
 		PostWriter.saveConfigPost(posts, configFilePost);
 	}
+
+	private void deletePostXML(int postId) throws Exception {
+		PostWriter.saveConfigPost(posts, configFilePost);
+	}
 	
 	private void saveResponseXML(Integer postId) throws Exception {
 		ResponseWriter.saveConfigResponse(responses, postId, configFileResponse);
 	}
 
-//	public String filterBySeniorUser(String userType) throws Exception {
-//		LinkedList<Post> resultsList = new LinkedList<Post>();
-//		Iterator<Post> it = posts.iterator();
-//		while (it.hasNext()) {
-//			Post act = it.next();
-//			if (act.getUser().equals("senior")) {
-//				resultsList.add(act);
-//			}
-//		}
-//		return display(resultsList);
-//	}
-//	
-//	public String filterByStudentUser(String userType) throws Exception {
-//		LinkedList<Post> resultsList = new LinkedList<Post>();
-//		Iterator<Post> it = posts.iterator();
-//		while (it.hasNext()) {
-//			Post act = it.next();
-//			if (act.getUser().equals("student")) {
-//				resultsList.add(act);
-//			}
-//		}
-//		return display(resultsList);
-//	}
+	public Object[] filterBySeniorUser(String userType) throws Exception {
+		ArrayList<Post> resultsList = new ArrayList<Post>();
+		Iterator<Post> it = posts.iterator();
+		while (it.hasNext()) {
+			Post act = it.next();
+			if (act.getUser().equalsIgnoreCase("senior")) {
+				resultsList.add(act);
+			}
+		}
+		return getList(resultsList);
+	}
+	
+	public Object[] filterByStudentUser(String userType) throws Exception {
+		ArrayList<Post> resultsList = new ArrayList<Post>();
+		Iterator<Post> it = posts.iterator();
+		while (it.hasNext()) {
+			Post act = it.next();
+			if (act.getUser().equalsIgnoreCase("student")) {
+				resultsList.add(act);
+			}
+		}
+		return getList(resultsList);
+	}
 
 	private String displayResponses(ArrayList<Response> responses) {
 		String ret = "";
@@ -127,7 +147,7 @@ public class Logic {
 			ret += response.toString() + "\n";
 		}
 		if (ret.isEmpty()) {
-			ret = "There are no recorded posts.";
+			ret = "You have not recieved any responses to this post.";
 		}
 		return ret;
 	}
@@ -137,7 +157,9 @@ public class Logic {
 		Iterator<Post> it = posts.iterator();
 		while (it.hasNext()) {
 			Post post = it.next();
-			resultsList.add(post);
+			if (post.getPostId() != -1) {
+				resultsList.add(post);
+			}
 		}
 		return getList(resultsList);
 	}
@@ -147,7 +169,7 @@ public class Logic {
 		Iterator<Post> it = posts.iterator();
 		while (it.hasNext()) {
 			Post post = it.next();
-			if (post.getUser().equals(user)) {
+			if (post.getUser().equals(user) && post.getPostId() != -1) {
 				resultsList.add(post);
 			}
 		}
@@ -176,11 +198,13 @@ public class Logic {
 	
 	public Integer countResponses(Integer postId) throws Exception {
 		ArrayList<Response> resultsList = new ArrayList<Response>();
-//		Iterator<Response> it = responses.iterator();
-//		Integer count = 0;
-//		while (it.hasNext()) {
-//			count++;
-//		}
+		Iterator<Response> it = responses.iterator();
+		while (it.hasNext()) {
+			Response response = it.next();
+			if (response.getPostId().intValue() == postId.intValue()) {
+				resultsList.add(response);
+			}
+		}
 		return resultsList.size();
 	}
 }

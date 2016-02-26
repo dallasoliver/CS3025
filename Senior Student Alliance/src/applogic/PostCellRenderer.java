@@ -21,7 +21,7 @@ public class PostCellRenderer extends JLabel implements ListCellRenderer {
 	public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 		Post post = (Post) value;
 		setFont(new Font("Source Sans Pro", Font.BOLD, 20));
-		setText("<html><br>" + post.getUser() + "<br>I am looking for help with: " + post.getWanted() + "<br>I am willing to offer: " + post.getOffer() + "<br><html/>");
+		setText("<html><br>" + post.getUser().toUpperCase() + "<br>I am looking for help with: " + post.getWanted() + "<br>I am willing to offer: " + post.getOffer() + "<br><html/>");
         setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0,Color.BLACK));
  		setBackground(new Color(255,255,255));
  

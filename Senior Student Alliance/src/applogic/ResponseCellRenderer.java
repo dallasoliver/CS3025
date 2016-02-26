@@ -2,6 +2,7 @@ package applogic;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -19,6 +20,7 @@ public class ResponseCellRenderer extends JLabel implements ListCellRenderer {
 
 	  public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 		  Response response = (Response) value;
+		  setFont(new Font("Georgia", Font.BOLD, 20));
 		  setText("<html>" + response.getMessage() + "<br>Contact Information: " + response.getContactBy() + "<html/>");
           setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0,Color.BLACK));
   		  setBackground(new Color(240,248,255));

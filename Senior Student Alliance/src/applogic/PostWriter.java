@@ -1,8 +1,8 @@
 package applogic;
 
 import java.io.FileOutputStream;
-import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.ListIterator;
 
 import javax.xml.stream.XMLEventFactory;
 import javax.xml.stream.XMLEventWriter;
@@ -14,14 +14,10 @@ import javax.xml.stream.events.StartDocument;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
-import java.util.ListIterator;
-
-import objects.*;
+import objects.Post;
 
 public class PostWriter {
 
-	public static Integer postId = 0;
-	
 	/**
 	 * Writes a list of posts to the .xml data store
 	 * 
@@ -33,8 +29,7 @@ public class PostWriter {
 	 */
 	public static void saveConfigPost(LinkedList<Post> posts,
 			String configFile) throws Exception {
-		
-		postId++;
+		int postId = 1;
 		
 		// create an XMLOutputFactory
 		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
@@ -56,7 +51,6 @@ public class PostWriter {
 		openRootNode(eventWriter);
 		while (iterator.hasNext()) {
 			Post postIn = iterator.next();
-			postIn.setPostId(postId);
 
 			// create config open tag
 			StartElement configStartElement = eventFactory
@@ -66,7 +60,7 @@ public class PostWriter {
 
 			// Write the different nodes
 			createNode(eventWriter, "postId", ""
-					+ postId);
+					+ postIn.getPostId());
 			createNode(eventWriter, "wanted", ""
 					+ postIn.getWanted());
 			createNode(eventWriter, "offer", postIn.getOffer());
@@ -83,7 +77,7 @@ public class PostWriter {
 		eventWriter.add(eventFactory.createEndDocument());
 		eventWriter.close();
 	}
-
+	
 	/**
 	 * creates and formats a new node in the .xml data store
 	 * 

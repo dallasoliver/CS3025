@@ -10,11 +10,12 @@ public class Post {
 	private String user;
 	private Date date;
 	
-	public Post(String wanted, String offer, String user, Date date) {
+	public Post(String wanted, String offer, String user, Date date, Integer postId) {
 		this.wanted = wanted;
 		this.offer = offer;
 		this.user = user;
 		this.date = date;
+		this.postId = postId;
 	}
 	
 	public Post() {

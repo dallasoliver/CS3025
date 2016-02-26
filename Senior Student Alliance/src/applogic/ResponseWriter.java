@@ -43,8 +43,7 @@ public class ResponseWriter {
 		openRootNode(eventWriter);
 		while (iterator.hasNext()) {
 			Response responseIn = iterator.next();
-			responseIn.setPostId(postId);
-
+			
 			// create config open tag
 			StartElement configStartElement = eventFactory
 					.createStartElement("", "", "Response");
@@ -53,7 +52,7 @@ public class ResponseWriter {
 
 			// Write the different nodes
 			createNode(eventWriter, "postId", ""
-					+ postId);
+					+ responseIn.getPostId());
 			createNode(eventWriter, "message", ""
 					+ responseIn.getMessage());
 			createNode(eventWriter, "contactBy",
