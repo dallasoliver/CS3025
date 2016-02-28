@@ -1,10 +1,17 @@
 <?xml version="1.0"?>
 <posts>
 <Post>
-	<postId>1</postId>
-	<wanted>asdas</wanted>
-	<offer>dsadas</offer>
+	<postId>2</postId>
+	<wanted>Baking bread</wanted>
+	<offer>Help with email</offer>
 	<user>student</user>
-	<date>1456459200000</date>
+	<date>1456718400000</date>
+</Post>
+<Post>
+	<postId>3</postId>
+	<wanted>Raking leaves</wanted>
+	<offer>Teach you how to knit</offer>
+	<user>senior</user>
+	<date>1456718400000</date>
 </Post>
 </posts>

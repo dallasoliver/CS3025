@@ -2,9 +2,11 @@ package applogic;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import objects.Post;
 import objects.Response;
@@ -162,6 +164,8 @@ public class Logic {
 				resultsList.add(post);
 			}
 		}
+		
+		Collections.reverse(resultsList);
 		return getList(resultsList);
 	}
 	

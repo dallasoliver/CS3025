@@ -21,6 +21,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -310,7 +311,7 @@ public class Interface extends JFrame{
 					            	};
 					            	
 					            	Object[] options = {"RESPOND", "REPORT", "CANCEL"};
-					            	int option = JOptionPane.showOptionDialog(null, "Click OK to continue", "Warning",
+					            	int option = JOptionPane.showOptionDialog(null, "Respond to this post or report it to administrator if inappropriate.", "Respond or Report",
 					                        JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
 					            	
 					            	if (option == JOptionPane.YES_OPTION) {
@@ -336,7 +337,7 @@ public class Interface extends JFrame{
 						    }
 						}
 					});
-				} else if (!textFieldUsername.getText().isEmpty() && textFieldPassword.getPassword().length == 0){
+				} else if (!textFieldUsername.getText().isEmpty() && textFieldPassword.getPassword().length != 0){
 					JOptionPane.showMessageDialog(frame,
 						"You have entered an invalid login. Please try again.",
 						"Inane error",
@@ -518,7 +519,7 @@ public class Interface extends JFrame{
 				            	};
 				            	
 				            	Object[] options = {"RESPOND", "REPORT", "CANCEL"};
-				            	int option = JOptionPane.showOptionDialog(null, "Click OK to continue", "Warning",
+				            	int option = JOptionPane.showOptionDialog(null, "Respond to this post or report it to administrator if inappropriate.", "Respond or Report",
 				                        JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
 				            	
 				            	if (option == JOptionPane.YES_OPTION) {
@@ -621,7 +622,7 @@ public class Interface extends JFrame{
 				            	};
 				            	
 				            	Object[] options = {"RESPOND", "REPORT", "CANCEL"};
-				            	int option = JOptionPane.showOptionDialog(null, "Click OK to continue", "Warning",
+				            	int option = JOptionPane.showOptionDialog(null, "Respond to this post or report it to administrator if inappropriate.", "Respond or Report",
 				                        JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
 				            	
 				            	if (option == JOptionPane.YES_OPTION) {
@@ -843,8 +844,9 @@ public class Interface extends JFrame{
 					postResponseList = new JList();
 				}
 				respScrollPane.setPreferredSize(new Dimension(410,350));
-        		responsesText.setText("Click a post to view it's responses.");
+        		responsesText.setText("Click a post to view its responses.");
 				respScrollPane.setViewportView(responsesText);
+				respScrollPane.setBorder(null);
 				respScrollPane.setPreferredSize(new Dimension(390,350));
 				responsesPane.setPreferredSize(new Dimension(400,350));
 				responsesPane.setBorder(new LineBorder(Color.BLACK, 3));
@@ -1063,7 +1065,7 @@ public class Interface extends JFrame{
 				            	};
 				            	
 				            	Object[] options = {"RESPOND", "REPORT", "CANCEL"};
-				            	int option = JOptionPane.showOptionDialog(null, "Click OK to continue", "Warning",
+				            	int option = JOptionPane.showOptionDialog(null, "Respond to this post or report it to administrator if inappropriate.", "Respond or Report",
 				                        JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
 				            	
 				            	if (option == JOptionPane.YES_OPTION) {
@@ -1324,7 +1326,7 @@ public class Interface extends JFrame{
 		submitPost.setFont(new Font("Georgia", Font.PLAIN, 20));
 		submitPost.setPreferredSize(new Dimension(130, 40));
 		imgCheck = new ImageIcon(
-				Interface.class.getResource("/check-mark.png"))
+				Interface.class.getResource("/checkmark.png"))
 				.getImage();
 		imgCheckSmall = imgCheck.getScaledInstance(50, 50,
 			java.awt.Image.SCALE_SMOOTH);
@@ -1334,7 +1336,18 @@ public class Interface extends JFrame{
 		allPostsListPane.setPreferredSize(new Dimension(900,500));
 		allPostsListPane.setBorder(new LineBorder(Color.BLACK, 3));
 		
-		datePicker = new JXDatePicker();
+		datePicker = new JXDatePicker() {
+			@Override
+	        public JToolTip createToolTip() {
+		        JToolTip toolTip = super.createToolTip();
+		        toolTip.setFont(new Font("Georgia", Font.PLAIN, 17));
+		        toolTip.setBackground(Color.BLACK);
+		        toolTip.setForeground(Color.WHITE);
+		
+		        return toolTip;
+			}
+        };
+        datePicker.setToolTipText("Click to choose a date from the calendar.");
 		datePicker.getEditor().setEditable(false);
 		
 		//---red---
@@ -1455,7 +1468,8 @@ public class Interface extends JFrame{
 					            	};
 					            	
 					            	Object[] options = {"RESPOND", "REPORT", "CANCEL"};
-					            	int option = JOptionPane.showOptionDialog(null, "Click OK to continue", "Warning",
+					            	
+					            	int option = JOptionPane.showOptionDialog(null, "Respond to this post or report it to administrator if inappropriate.", "Respond or Report",
 					                        JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
 					            	
 					            	if (option == JOptionPane.YES_OPTION) {
@@ -1638,7 +1652,7 @@ public class Interface extends JFrame{
 					datePicker.setDate(null);
 				} catch (Exception er) {
 					lblCheck2.setIcon(null);
-					JOptionPane.showMessageDialog(addPostPanel,
+					JOptionPane.showMessageDialog(null,
 							er.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
